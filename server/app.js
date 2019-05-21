@@ -1,10 +1,14 @@
+require('dotenv').config()
+
 const express= require('express')
+
 const bodyParser= require('body-parser')
 const app = express()
 const cors = require('cors')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 const jwt = require('jsonwebtoken')
+const DB_PASS = process.env.DB_PASS
 
 const pgp = require('pg-promise')()
 const PORT = process.env.PORT || 8080
@@ -21,7 +25,7 @@ app.use(bodyParser.json({limit: '50mb'}))
     "port": 5432,
     "database": "wqvacxnt",
     "user": "wqvacxnt",
-    "password":"bM2NzSbufCMxdKbPApBC81ccllnzndGm"
+    "password":DB_PASS
   
   }
 

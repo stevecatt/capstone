@@ -1,28 +1,46 @@
 import * as actionTypes from './actions/actionTypes'
 
-const initialState = {
-    test:[],
-    isAuthenticated:false,
-}
 
-const reducer = (state = initialState, action) =>{
-    switch(action.type){
-    case actionTypes.IS_AUTHENITCATED:
+const initialState = {
+   
+    isAuthenticated:false,
+   
+    uid:0,
+    latitude:0,
+    longitude:0
+    
+  }
+  
+  const reducer = (state = initialState, action) => {
+  
+    switch(action.type) {
+      
+        case actionTypes.IS_AUTHENITCATED:
         return{
           ...state,
           isAuthenticated: action.token != null ? true : false,
           uid:action.uid
         }
-
-    case 'LOGOUT':
+       
+        case actionTypes.LOGOUT:
         return{
           ...state,
           isAuthenticated: false
         }
 
-    }
-    
-    return state 
-}
+        case actionTypes.ADDED_MARKER:
+        return{
+          ...state,
+          latitude:action.lat,
+          longitude:action.long
+        }
+        
+        
 
-export default reducer
+    }
+  
+    return state
+  }
+  
+  export default reducer
+  

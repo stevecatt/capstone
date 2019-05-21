@@ -1,4 +1,4 @@
-import { AIR_KEY} from "../.env.json.js";
+import { AIR_KEY} from "../.env.json";
 
 
 // export const removeFavorite = 'https://scorestracker.herokuapp.com/remove-favorite'

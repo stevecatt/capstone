@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 
 import * as actionTypes from '../store/actions/actionTypes'
 
-import { setDefaultBreakpoints } from 'react-socks';
+import { setDefaultBreakpoints } from 'react-socks/';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import {
