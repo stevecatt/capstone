@@ -7,7 +7,8 @@ const initialState = {
    
     uid:0,
     latitude:0,
-    longitude:0
+    longitude:0,
+    homeAirQuality:{}
     
   }
   
@@ -28,11 +29,21 @@ const initialState = {
           isAuthenticated: false
         }
 
-        case actionTypes.ADDED_MARKER:
+        case actionTypes.ADDED_HOME:
         return{
           ...state,
           latitude:action.lat,
           longitude:action.long
+        }
+        case actionTypes.AIR_QUALITY:
+        return{
+          ...state,
+          homeAirQuality: action.airQuality
+        }
+        case actionTypes.ADDED_MARKER:
+        return{
+          ...state,
+          marker:action.marker
         }
         
         

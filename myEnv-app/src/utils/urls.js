@@ -18,3 +18,4 @@ export const saveBackup = 'http://localhost:8080/apisc'
 
 export const countries = 'https://api.airvisual.com/v2/countries?key='+AIR_KEY
 export const nearMe = "https://api.airvisual.com/v2/nearest_city?key="+AIR_KEY
+export const coords ="api.airvisual.com/v2/nearest_city?lat={{LATITUDE}}&lon={{LONGITUDE}}&key={{YOUR_API_KEY}}"
