@@ -41,10 +41,13 @@ function authenticate(req,res, next) {
   let headers = req.headers["authorization"]
   
   let token = headers.split(' ')[1]
+  console.log(token)
 
   jwt.verify(token,'secret',(err, decoded) => {
     if(decoded) {
+      console.log(decoded)
       if(decoded.id) {
+        console.log(decoded.id)
         next()
       } else {
         res.status(401).json({message: 'Token invalid'})
@@ -100,10 +103,11 @@ app.get('/hello', (req,res) => {
   })
 
 
-//getting saved golfer id's
+//getting saved markers id's
 app.post('/get-favorites',authenticate,(req,res)=>{
-  let user=req.body.uid
-  db.any('SELECT pga_id FROM environmental_table WHERE user_id =$1',[user])
+  let user=req.body.userId
+  console.log("get user",user)
+  db.any('SELECT marker_lat as lat, marker_long as long, marker_id as ts FROM environmental_table WHERE user_id =$1',[user])
   .then((favorites)=>{
     res.json({favorites})
   })
@@ -111,14 +115,14 @@ app.post('/get-favorites',authenticate,(req,res)=>{
   //res.json({user})
 
 })
-//removing favorite golfer
+//removing favorite marker by user id and marker id 
 
 app.post('/remove-favorite',authenticate,(req,res)=>{
 let user = req.body.userId
 let pgaId = parseInt(req.body.playerId)
 //console.log(user,pgaId)
 
-db.any('DELETE FROM environmental_table WHERE pga_id = $1 AND user_id = $2 RETURNING id',[pgaId,user])
+db.any('DELETE FROM environmental_table WHERE marker_id = $1 AND user_id = $2 RETURNING id',[pgaId,user])
 .then((deleted)=>{
   if (deleted){
     //console.log(deleted)
@@ -138,10 +142,14 @@ db.any('DELETE FROM environmental_table WHERE pga_id = $1 AND user_id = $2 RETUR
 app.post('/save-favorite',authenticate,(req,res)=>{
 //console.log(req.body.playerId)
 let user =req.body.userId
-let pgaId = parseInt(req.body.playerId)
-//console.log(user,pgaId)
+let markerId = req.body.ts
+let markerLat = req.body.markLat
+let markerLong=req.body.markLong
+console.log(user,markerId,markerLat,markerLong)
+//res.json("success")
 
-db.one('INSERT INTO environmental_table (pga_id, user_id) VALUES($1,$2) RETURNING id', [pgaId, user])
+
+db.one('INSERT INTO environmental_table (marker_lat,marker_long, marker_id, user_id) VALUES($1,$2,$3,$4) RETURNING id', [markerLat,markerLong,markerId, user])
 .then((success)=>{
   //console.log(success)
   if(success){

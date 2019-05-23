@@ -20,8 +20,7 @@ class App extends Component {
       <div>
         
         App
-        <Register>Register</Register>
-        <Login>login</Login>
+        <Login/>
         <Map>Mapbox</Map>
         
        
