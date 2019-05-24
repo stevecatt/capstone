@@ -119,14 +119,14 @@ app.post('/get-favorites',authenticate,(req,res)=>{
 
 app.post('/remove-favorite',authenticate,(req,res)=>{
 let user = req.body.userId
-let pgaId = parseInt(req.body.playerId)
-//console.log(user,pgaId)
+let markerId = parseInt(req.body.markerId)
+console.log(user,markerId)
 
-db.any('DELETE FROM environmental_table WHERE marker_id = $1 AND user_id = $2 RETURNING id',[pgaId,user])
+db.any('DELETE FROM environmental_table WHERE marker_id = $1 AND user_id = $2 RETURNING id',[markerId,user])
 .then((deleted)=>{
   if (deleted){
-    //console.log(deleted)
-    res.json({message:"removed"})
+    console.log("deleted this one",deleted)
+    res.json({message:"removed",deleted})
   }
   
 

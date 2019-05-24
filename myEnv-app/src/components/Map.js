@@ -27,11 +27,35 @@ class Map extends Component {
         city:"",
         dompol:"",
         markerAqi:[],
-        message:""
+        message:"",
+        message:"",
+        mouseOverId:0
       };
   }
 
+  onMouseIn =(key)=>{
+    console.log(key)
+    this.setState({
+      mouseOverId :key,
+      message:"{:key}"
+    })
+
+   console.log("what the foo")
+  }
+
+  onMouseOut =()=>{
+    this.setState({
+      message:""
+    })
+
+   console.log("what the foo")
+  }
+
   getUserMarkers=()=>{
+    this.setState({
+      marker:[],
+      markerAqi:[]
+    })
     axios.post(urls.getFavorites,{
       userId:this.props.userId
     })
@@ -44,7 +68,7 @@ class Map extends Component {
       }
     })
     .then(()=>{
-      let retrievedMarkers = this.state.marker.map(llt=>{
+        this.state.marker.map(llt=>{
         console.log(llt.lat,llt.long,llt.ts)
         //kinda workd but needs to think about duplivate timestamps 
         this.showMarkers(llt.lat,llt.long,llt.ts)
@@ -151,20 +175,21 @@ class Map extends Component {
 
         
         
-      } else if (response.data.success){
-        console.log(response.data.success)
+      } else if (response.data.error){
+        console.log(response.data.error)
        
-        //this.props.history.push('/login')
-        this.props.onResultTrue()
-        console.log("registered")
-        //this.props.history.push('/login')
+       
+        
+       
+        
       }else{
           console.log("error")
       }
     })
     console.log(marker)
     this.setState({
-      marker:this.state.marker.concat(marker)
+      marker:this.state.marker.concat(marker),
+      
     })
     this.props.addedMArker(marker)
     //get polution and save fave
@@ -177,18 +202,55 @@ class Map extends Component {
 
   }
   
-  removeIcon=(key)=>{
-    console.log("i clicked the button")
-    //this.getUserMarkers()
+  removeIcon=(key,e)=>{
+    
+    console.log("this the key",key)
+    console.log ("this is markerst,",this.state.marker)
+
+    let markers= this.state.marker.filter(mark => mark.ts != key)
+    console.log(e,"this is e")
+    this.setState({
+      marker:markers,
+      markerAqi:[]
+    }, () => {
+      
+      markers.map(llt=>{
+        console.log("this is the feed to aqi,",llt.lat,llt.long,llt.ts)
+        //kinda workd but needs to think about duplivate timestamps 
+        this.showMarkers(llt.lat,llt.long,llt.ts)
+        
+      
+      })
+
+    })
+    
+  
+    
+    console.log ("these are the markers left",markers)
+    console.log("i clicked the button",key,this.props.userId)
+    axios.post(urls.removeFavorite,{
+      markerId:key,
+      userId:this.props.userId
+
+
+    })
+    .then((response)=>{
+      console.log('this should come back from server',response)
+      //this.getUserMarkers()
+    })
+    .then(()=>{
+     //this.getUserMarkers()
+      console.log("i should be ready to retrieve stuff ")
+    })
   }
   render() {
 
     let markerData = this.state.markerAqi.map(data => {
       return (
-        <Marker key={data.ts} latitude={data.lat} longitude={data.long} offsetLeft={-20} offsetTop={-10}>
+        <Marker   key={data.ts} latitude={data.lat} longitude={data.long} offsetLeft={-20} offsetTop={-10}>
         
-         <button onClick={()=>
-          this.removeIcon(data.ts)}>{data.aqi}</button></Marker>
+         <button  onMouseEnter={()=>this.onMouseIn(data.ts)} onMouseLeave={()=>this.onMouseOut()} onDoubleClick={()=>
+          this.removeIcon(data.ts)}>{data.aqi}{this.state.mouseOverId == data.ts ? this.state.message : null}</button></Marker>
       )
     })
     
