@@ -16,7 +16,7 @@ import Login from './components/Login'
 import Logout from './components/Logout'
 import Register from './components/Register'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import AirQuality from './components/AirQuality';
+import Weather from './components/Weather';
 
 
 
@@ -34,7 +34,7 @@ ReactDOM.render(
                 <Switch>
                     <Route path="/register" component={Register} />
                     <Route path="/login" component={Login} />
-                    <Route path ="/air-quality" component= {AirQuality}/>
+                    <Route path ="/air-quality" component= {Weather}/>
                    
                     <Route path="/logout" component={Logout}/>
                     <App />

@@ -8,7 +8,7 @@ import MapContainer from './components/GoogleMap'
 //import GoogleMapsContainer from './components/TestMap'
 
 import 'mapbox-gl/dist/mapbox-gl.css';
-import AirQuality from './components/AirQuality';
+import Weather from './components/Weather';
 
 
 class App extends Component {
@@ -19,9 +19,10 @@ class App extends Component {
     return (
       <div>
         
-        App
-        <Login/>
+        
+        
         <Map>Mapbox</Map>
+        
         
        
        
