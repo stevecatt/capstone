@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import * as actionTypes from '../store/actions/actionTypes'
 import axios from 'axios'
 import * as urls from '../utils/urls'
+import '../App.css';
 
 class Map extends Component {
   constructor(){
@@ -37,18 +38,19 @@ class Map extends Component {
     console.log(key)
     this.setState({
       mouseOverId :key,
-      message:"{:key}"
+      
     })
 
-   console.log("what the foo")
+   //console.log("what the foo")
   }
 
   onMouseOut =()=>{
     this.setState({
-      message:""
+      mouseOverId:0
+      
     })
 
-   console.log("what the foo")
+   //console.log("what the foo")
   }
 
   getUserMarkers=()=>{
@@ -60,7 +62,7 @@ class Map extends Component {
       userId:this.props.userId
     })
     .then(markers =>{
-      console.log(markers.data.favorites)
+      //console.log(markers.data.favorites)
       if(markers.data.favorites.length > 0){
         this.setState({
           marker:this.state.marker.concat(markers.data.favorites)
@@ -69,7 +71,7 @@ class Map extends Component {
     })
     .then(()=>{
         this.state.marker.map(llt=>{
-        console.log(llt.lat,llt.long,llt.ts)
+       // console.log(llt.lat,llt.long,llt.ts)
         //kinda workd but needs to think about duplivate timestamps 
         this.showMarkers(llt.lat,llt.long,llt.ts)
       })
@@ -82,7 +84,7 @@ class Map extends Component {
     fetch(url)
     .then(response => response.json())
     .then((json)=>{
-      console.log(json)
+      console.log("response from china",json)
       let markerAqi = {
         lat:lat,
         long:long,
@@ -90,7 +92,17 @@ class Map extends Component {
         aqi:json.data.aqi,
         dompol:json.data.dominentpol,
         city:json.data.city.name,
+        pm25:json.data.iaqi.pm25,
+        o3:json.data.iaqi.o3,
+        so2:json.data.iaqi.so2,
+        no2:json.data.iaqi.no2,
+
+        iaqi:json.data.iaqi
       }
+
+      //add data from second call to swiss
+      let markerAqiAndWeather=Object.assign(markerAqi,{test:"test"})
+      console.log(markerAqiAndWeather,"and weather test")
       console.log(markerAqi)
       this.setState({
         
@@ -101,6 +113,7 @@ class Map extends Component {
         
         
     })
+    console.log("trying to find json",json)
 
     })
   }
@@ -205,7 +218,7 @@ class Map extends Component {
   removeIcon=(key,e)=>{
     
     console.log("this the key",key)
-    console.log ("this is markerst,",this.state.marker)
+    console.log ("this is marker,",this.state.marker)
 
     let markers= this.state.marker.filter(mark => mark.ts != key)
     console.log(e,"this is e")
@@ -246,11 +259,54 @@ class Map extends Component {
   render() {
 
     let markerData = this.state.markerAqi.map(data => {
+      let pm25=0
+      let o3= 0
+      let no2=0
+      let so2=0
+      //account for missing readings
+      if (data.pm25==null){
+          pm25 = "N/A"
+      }
+      else{
+           pm25 = data.pm25.v
+      }
+      if (data.o3==null){
+          o3 = "N/A"
+      }
+      else{
+        o3 = data.o3.v
+      }
+      if (data.no2==null){
+         no2 = "N/A"
+      }
+      else{
+        no2= data.no2.v
+      }
+      if (data.so2==null){
+       so2 = "N/A"
+        }
+      else{
+         so2 = data.so2.v
+      }
+
       return (
         <Marker   key={data.ts} latitude={data.lat} longitude={data.long} offsetLeft={-20} offsetTop={-10}>
         
          <button  onMouseEnter={()=>this.onMouseIn(data.ts)} onMouseLeave={()=>this.onMouseOut()} onDoubleClick={()=>
-          this.removeIcon(data.ts)}>{data.aqi}{this.state.mouseOverId == data.ts ? this.state.message : null}</button></Marker>
+          this.removeIcon(data.ts)}>
+          {this.state.mouseOverId != data.ts? <span>{data.aqi}</span>:null}
+          {this.state.mouseOverId == data.ts ?
+          <ul>
+          <li>AQI: {data.aqi}</li>
+          <li>Primary Polutant:{data.dompol}</li>
+          <li>Particulates:{pm25}</li>
+          <li>Ozone:{o3}</li>
+          <li>NOx:{no2}</li>
+          <li>Sulfer Dioxide:{so2}</li>
+          
+          </ul>: null}
+          </button>
+          </Marker>
       )
     })
     
