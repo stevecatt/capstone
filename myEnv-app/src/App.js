@@ -9,6 +9,7 @@ import MapContainer from './components/GoogleMap'
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Weather from './components/Weather';
+import LandingPage from './components/LandingPage';
 
 
 class App extends Component {
@@ -20,7 +21,7 @@ class App extends Component {
       <div>
         
         
-        
+        <LandingPage/>
         <Map>Mapbox</Map>
         
         

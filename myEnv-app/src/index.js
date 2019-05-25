@@ -17,6 +17,7 @@ import Logout from './components/Logout'
 import Register from './components/Register'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Weather from './components/Weather';
+import LandingPage from './components/LandingPage';
 
 
 
@@ -32,9 +33,11 @@ ReactDOM.render(
         <BreakpointProvider>
             <BaseLayout>
                 <Switch>
+                    <Route path="/" exact component={LandingPage}/>
                     <Route path="/register" component={Register} />
                     <Route path="/login" component={Login} />
-                    <Route path ="/air-quality" component= {Weather}/>
+                    <Route path ="/weather" component= {Weather}/>
+                    
                    
                     <Route path="/logout" component={Logout}/>
                     <App />
