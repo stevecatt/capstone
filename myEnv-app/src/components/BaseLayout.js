@@ -61,13 +61,13 @@ class Menu extends Component {
             <Nav className="ml-auto" navbar>
             <NavItem><NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar" to="/favorites"> User Map</NavLink></NavItem>
               <NavItem>
-              {this.props.isAuth ?  <NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar"to="/air-quality"> air quality </NavLink>:null}
+              {this.props.isAuth ?  <NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar"to="/air-quality"> Weather </NavLink>:null}
               </NavItem>
               <NavItem>
-              {!this.props.isAuth ?<NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar" to="/login"> login</NavLink>:null}
+              {!this.props.isAuth ?<NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar" to="/login"> Login</NavLink>:null}
               </NavItem>
               <NavItem>
-              {this.props.isAuth ?  <NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar"to="/logout"> logout </NavLink>:null}
+              {this.props.isAuth ?  <NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar"to="/logout"> Logout </NavLink>:null}
               </NavItem>
               <NavItem>
               {!this.props.isAuth ?<NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar" to="/register"> Register</NavLink>:null}

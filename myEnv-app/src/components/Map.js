@@ -3,11 +3,14 @@ import ReactMapGL from 'react-map-gl';
 import {Marker} from 'react-map-gl';
 import { MAPBOX_TOKEN } from "../.env.json";
 import { CHINA_KEY } from "../.env.json";
+import { WEATHER_KEY } from "../.env.json"
+import { AIR_KEY } from "../.env.json"
 import { connect } from 'react-redux'
 import * as actionTypes from '../store/actions/actionTypes'
 import axios from 'axios'
 import * as urls from '../utils/urls'
 import '../App.css';
+import Weather from './Weather'
 
 class Map extends Component {
   constructor(){
@@ -20,17 +23,27 @@ class Map extends Component {
           longitude: -118.0,
            zoom:2
         },
-        marker: [],
+        markers: [],
         latitude:0,
-        longitube:0,
+        longitude:0,
         aqi:0,
         no2:0,
         city:"",
         dompol:"",
         markerAqi:[],
         message:"",
-        message:"",
-        mouseOverId:0
+        windDirection:"",
+        windspeed:0,
+        temperature:0,
+        sunrise:"",
+        sunset:"",
+        weatherIcon:"",
+
+
+
+
+        mouseOverId:0,
+        weather:{}
       };
   }
 
@@ -78,7 +91,58 @@ class Map extends Component {
       
     })
   }
-  
+
+  // getWeather=(lat,long)=>{
+  //   let swissurl = "https://api.airvisual.com/v2/nearest_city?lat="+lat+"&lon="+long+"&key="+AIR_KEY
+  //   fetch(swissurl)
+  //   .then(response=>response.json)
+  //   .then((json)=>{
+  //     console.log("swiss stuff",json)
+  //     this.setState({
+  //       weather:"weather"
+  //     })
+      
+
+  //   })
+  // }
+
+  getWindDirection = (angle) =>{
+    
+      let directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+      return directions[Math.round(((angle %= 360) < 0 ? angle + 360 : angle) / 45) % 8];
+   
+  }
+
+  otherGetWeather=(lat,long)=>{
+    let localWeather= "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+long+"&units=imperial&apiKey="+WEATHER_KEY
+    fetch(localWeather)
+    .then(response=>response.json())
+    .then(weatherItems=>{
+      let sunsetHMS = new Date(weatherItems.sys.sunset*1000)
+      let sunriseHMS = new Date(weatherItems.sys.sunrise*1000)
+      let sunrise = sunriseHMS.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      let sunset = sunsetHMS.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      let windDirection = this.getWindDirection(weatherItems.wind.deg)
+      let windspeed= weatherItems.wind.speed
+      let windRound= Math.round(windspeed)
+      let temperature =weatherItems.main.temp
+      let tempRound = Math.round(temperature)
+
+      console.log(weatherItems)
+      this.setState({
+        temperature:tempRound,
+        sunrise:sunrise,
+        sunset:sunset,
+        windspeed:windRound,
+        windDirection:windDirection,
+        weatherIcon:weatherItems.weather[0].icon,
+        name:weatherItems.name
+
+
+      })
+
+      })
+  }
   showMarkers=(lat,long,ts)=>{
     let url = "https://api.waqi.info/feed/geo:"+lat+";"+long+"/?token="+CHINA_KEY
     fetch(url)
@@ -96,6 +160,7 @@ class Map extends Component {
         o3:json.data.iaqi.o3,
         so2:json.data.iaqi.so2,
         no2:json.data.iaqi.no2,
+        name:"",
 
         iaqi:json.data.iaqi
       }
@@ -118,41 +183,49 @@ class Map extends Component {
     })
   }
 
-  componentDidMount() {
-    if('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        console.log(position.coords.latitude)
-       
-        this.setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          viewport: {
-            width:800,
-            height:800,
-            latitude:position.coords.latitude,
-            longitude:position.coords.longitude,
-            zoom:8
-          }
-        })
-        this.props.addedHome(position.coords.latitude,position.coords.longitude)
-        let lat = position.coords.latitude
-        let long = position.coords.longitude
-        let url = "https://api.waqi.info/feed/geo:"+lat+";"+long+"/?token="+CHINA_KEY
-        fetch(url)
-        .then(response => response.json())
-        .then((json)=>{
-          this.setState({
-            aqi:json.data.aqi,
-            city:json.data.city.name,
-            dompol:json.data.dominentpol
-            
-        })
 
-        })
+  removeIcon=(key)=>{
+    
+    console.log("this the key",key)
+    console.log ("this is marker,",this.state.marker)
+
+    let markers= this.state.markers.filter(mark => mark.ts != key)
+    
+    this.setState({
+      markers:markers,
+      markerAqi:[]
+    },
+    //the comma and () mean wait till im done with previous step when setting state 
+    () => {
+      
+      markers.map(llt=>{
+        console.log("this is the feed to aqi,",llt.lat,llt.long,llt.ts)
+        //kinda workd but needs to think about duplivate timestamps 
+        this.showMarkers(llt.lat,llt.long,llt.ts)
         
+      
       })
-    }
-    this.getUserMarkers()
+
+    })
+    
+  
+    
+    console.log ("these are the markers left",markers)
+    console.log("i clicked the button",key,this.props.userId)
+    axios.post(urls.removeFavorite,{
+      markerId:key,
+      userId:this.props.userId
+
+
+    })
+    .then((response)=>{
+      console.log('this should come back from server',response)
+      //this.getUserMarkers()
+    })
+    .then(()=>{
+     //this.getUserMarkers()
+      console.log("i should be ready to retrieve stuff ")
+    })
   }
 
   handleClick=(e)=>{
@@ -166,6 +239,7 @@ class Map extends Component {
       ts:ts,
       
     }
+    
     //save favorites 
     console.log(markLat,markLong,this.props.userId,ts,"this is what i hope to send")
     axios.post(urls.saveFavorite, {
@@ -201,7 +275,7 @@ class Map extends Component {
     })
     console.log(marker)
     this.setState({
-      marker:this.state.marker.concat(marker),
+      markers:this.state.markers.concat(marker),
       
     })
     this.props.addedMArker(marker)
@@ -210,53 +284,58 @@ class Map extends Component {
         let lat = markLat
         let long = markLong
        this.showMarkers(lat,long,ts)
+       //this.getWeather(lat,long)
         
         
 
   }
-  
-  removeIcon=(key,e)=>{
-    
-    console.log("this the key",key)
-    console.log ("this is marker,",this.state.marker)
 
-    let markers= this.state.marker.filter(mark => mark.ts != key)
-    console.log(e,"this is e")
-    this.setState({
-      marker:markers,
-      markerAqi:[]
-    }, () => {
-      
-      markers.map(llt=>{
-        console.log("this is the feed to aqi,",llt.lat,llt.long,llt.ts)
-        //kinda workd but needs to think about duplivate timestamps 
-        this.showMarkers(llt.lat,llt.long,llt.ts)
+  componentDidMount() {
+    if('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log(position.coords.latitude)
+       
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          viewport: {
+            width:800,
+            height:800,
+            latitude:position.coords.latitude,
+            longitude:position.coords.longitude,
+            zoom:8
+          }
+        })
+        this.props.addedHome(position.coords.latitude,position.coords.longitude)
+        let lat = position.coords.latitude
+        let long = position.coords.longitude
         
       
+        let url = "https://api.waqi.info/feed/geo:"+lat+";"+long+"/?token="+CHINA_KEY
+        fetch(url)
+        .then(response => response.json())
+        .then((json)=>{
+          this.setState({
+            aqi:json.data.aqi,
+            city:json.data.city.name,
+            dompol:json.data.dominentpol
+            
+        })
+
+        })
+        this.otherGetWeather(position.coords.latitude,position.coords.longitude)
+        
       })
-
-    })
+    }
+    this.getUserMarkers()
+    //this.otherGetWeather(this.state.latitude,this.state.longitude)
     
-  
-    
-    console.log ("these are the markers left",markers)
-    console.log("i clicked the button",key,this.props.userId)
-    axios.post(urls.removeFavorite,{
-      markerId:key,
-      userId:this.props.userId
-
-
-    })
-    .then((response)=>{
-      console.log('this should come back from server',response)
-      //this.getUserMarkers()
-    })
-    .then(()=>{
-     //this.getUserMarkers()
-      console.log("i should be ready to retrieve stuff ")
-    })
   }
+
+  
+  
   render() {
+    
 
     let markerData = this.state.markerAqi.map(data => {
       let pm25=0
@@ -292,7 +371,7 @@ class Map extends Component {
       return (
         <Marker   key={data.ts} latitude={data.lat} longitude={data.long} offsetLeft={-20} offsetTop={-10}>
         
-         <button  onMouseEnter={()=>this.onMouseIn(data.ts)} onMouseLeave={()=>this.onMouseOut()} onDoubleClick={()=>
+         <button  onClick={()=>this.otherGetWeather(data.lat,data.long)} onMouseEnter={()=>this.onMouseIn(data.ts)} onMouseLeave={()=>this.onMouseOut()} onDoubleClick={()=>
           this.removeIcon(data.ts)}>
           {this.state.mouseOverId != data.ts? <span>{data.aqi}</span>:null}
           {this.state.mouseOverId == data.ts ?
@@ -322,11 +401,24 @@ class Map extends Component {
       <img src='https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'/>
      
     </Marker>
+    
     {markerData}
     </ReactMapGL>
+    
     <h1>AQI {this.state.aqi}</h1>
-    <h2>{this.state.city}</h2>
-    <h2>{this.state.dompol}</h2>
+    <h2>{this.state.name}</h2>
+    {/* <div class="row">
+      <img id= "icon" src= {`"http://openweathermap.org/img/w/"{this.state.weatherIcon}".png"`}>
+      <p>${weatherItems.name} Weather: ${tempeRound} °</p>
+      <p class="hideContent">Wind  : ${windDirection} ${windRound} Mph </p>
+      <p class="hideContent">Sunrise: ${sunrise} </p>
+      <p class="hideContent">Sunset: ${sunset} </p>
+      </div> */}
+    <h2>Polutant:{this.state.dompol}</h2>
+    <img id= "icon" src= {`http://openweathermap.org/img/w/${this.state.weatherIcon}.png`}/>
+    <p>Temperature  :{this.state.temperature}</p>
+    <p>Wind    :{this.state.windspeed}{this.state.windDirection}</p>
+   
     </div>
     )
     }

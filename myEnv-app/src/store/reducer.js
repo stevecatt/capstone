@@ -8,7 +8,7 @@ const initialState = {
     uid:0,
     latitude:0,
     longitude:0,
-    homeAirQuality:{}
+    homeWeather:{}
     
   }
   
@@ -35,10 +35,10 @@ const initialState = {
           latitude:action.lat,
           longitude:action.long
         }
-        case actionTypes.AIR_QUALITY:
+        case actionTypes.WEATHER_FETCHED:
         return{
           ...state,
-          homeAirQuality: action.airQuality
+          homeWeather: action.weather
         }
         case actionTypes.ADDED_MARKER:
         return{
