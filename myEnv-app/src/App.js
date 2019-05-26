@@ -3,7 +3,7 @@ import React,{Component} from 'react';
 import './App.css';
 import Login from './components/Login';
 import Register from './components/Register';
-import Map from './components/Map'
+import Mapbox from './components/Mapbox'
 import MapContainer from './components/GoogleMap'
 //import GoogleMapsContainer from './components/TestMap'
 
@@ -22,7 +22,7 @@ class App extends Component {
         
         
         <LandingPage/>
-        <Map>Mapbox</Map>
+        <Mapbox>Mapbox</Mapbox>
         
         
        

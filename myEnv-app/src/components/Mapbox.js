@@ -12,7 +12,7 @@ import * as urls from '../utils/urls'
 import '../App.css';
 import Weather from './Weather'
 
-class Map extends Component {
+class Mapbox extends Component {
   constructor(){
     super()
     this.state = {
@@ -105,7 +105,7 @@ class Map extends Component {
 
   //   })
   // }
-
+ //move this to common functions 
   getWindDirection = (angle) =>{
     
       let directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
@@ -113,7 +113,7 @@ class Map extends Component {
    
   }
 
-  otherGetWeather=(lat,long)=>{
+  getWeather=(lat,long)=>{
     let localWeather= "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+long+"&units=imperial&apiKey="+WEATHER_KEY
     fetch(localWeather)
     .then(response=>response.json())
@@ -323,12 +323,12 @@ class Map extends Component {
         })
 
         })
-        this.otherGetWeather(position.coords.latitude,position.coords.longitude)
+        this.getWeather(position.coords.latitude,position.coords.longitude)
         
       })
     }
     this.getUserMarkers()
-    //this.otherGetWeather(this.state.latitude,this.state.longitude)
+   
     
   }
 
@@ -371,7 +371,7 @@ class Map extends Component {
       return (
         <Marker   key={data.ts} latitude={data.lat} longitude={data.long} offsetLeft={-20} offsetTop={-10}>
         
-         <button  onClick={()=>this.otherGetWeather(data.lat,data.long)} onMouseEnter={()=>this.onMouseIn(data.ts)} onMouseLeave={()=>this.onMouseOut()} onDoubleClick={()=>
+         <button  onClick={()=>this.getWeather(data.lat,data.long)} onMouseEnter={()=>this.onMouseIn(data.ts)} onMouseLeave={()=>this.onMouseOut()} onDoubleClick={()=>
           this.removeIcon(data.ts)}>
           {this.state.mouseOverId != data.ts? <span>{data.aqi}</span>:null}
           {this.state.mouseOverId == data.ts ?
@@ -407,17 +407,13 @@ class Map extends Component {
     
     <h1>AQI {this.state.aqi}</h1>
     <h2>{this.state.name}</h2>
-    {/* <div class="row">
-      <img id= "icon" src= {`"http://openweathermap.org/img/w/"{this.state.weatherIcon}".png"`}>
-      <p>${weatherItems.name} Weather: ${tempeRound} °</p>
-      <p class="hideContent">Wind  : ${windDirection} ${windRound} Mph </p>
-      <p class="hideContent">Sunrise: ${sunrise} </p>
-      <p class="hideContent">Sunset: ${sunset} </p>
-      </div> */}
+    
     <h2>Polutant:{this.state.dompol}</h2>
     <img id= "icon" src= {`http://openweathermap.org/img/w/${this.state.weatherIcon}.png`}/>
     <p>Temperature  :{this.state.temperature}</p>
     <p>Wind    :{this.state.windspeed}{this.state.windDirection}</p>
+    <p>Sunrise   : {this.state.sunrise}</p>
+    <p>Sunset   : {this.state.sunset}</p>
    
     </div>
     )
@@ -439,4 +435,4 @@ class Map extends Component {
     }
     
 
-export default connect(mapStateToProps,mapDispatchToProps)(Map)
+export default connect(mapStateToProps,mapDispatchToProps)(Mapbox)

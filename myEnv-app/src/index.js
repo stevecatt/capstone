@@ -18,6 +18,8 @@ import Register from './components/Register'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Weather from './components/Weather';
 import LandingPage from './components/LandingPage';
+import Mapbox from './components/Mapbox';
+
 
 
 
@@ -37,6 +39,7 @@ ReactDOM.render(
                     <Route path="/register" component={Register} />
                     <Route path="/login" component={Login} />
                     <Route path ="/weather" component= {Weather}/>
+                    <Route path ="/favorites" component={Mapbox}/>
                     
                    
                     <Route path="/logout" component={Logout}/>
