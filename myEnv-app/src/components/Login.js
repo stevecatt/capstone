@@ -52,7 +52,7 @@ class Login extends Component {
           this.props.onTokenRecieved(token,uid)
           setAuthenticationHeader(token)
           console.log("Logged in")
-          //this.props.history.push('/userpage')
+          this.props.history.push('/userpage')
           }else{
             this.setState({
               message:"Incorrect Username or Password"

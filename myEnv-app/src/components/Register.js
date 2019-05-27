@@ -59,7 +59,7 @@ class Register extends Component {
             //this.props.history.push('/login')
             this.props.onResultTrue()
             console.log("registered")
-            //this.props.history.push('/login')
+            this.props.history.push('/login')
           }else{
               console.log("error")
           }

@@ -25,6 +25,37 @@
 li {
   list-style: none;
 }
+
+ul {
+  background-color:white
+}
+
+.orange {
+  background-color : orange
+} 
+
+.yellow {
+  background-color :yellow
+}
+
+.purple {
+  background-color : purple
+}
+.gonna-die {
+  background-color :brown
+}
+span {
+  background-color:white
+}
+.mapboxMarker {
+  background-image: url('./images/mapbox-icon.png');
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

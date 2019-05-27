@@ -3,12 +3,13 @@ import React,{Component} from 'react';
 import './App.css';
 import Login from './components/Login';
 import Register from './components/Register';
-import Map from './components/Map'
+import Mapbox from './components/Mapbox'
 import MapContainer from './components/GoogleMap'
 //import GoogleMapsContainer from './components/TestMap'
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Weather from './components/Weather';
+import LandingPage from './components/LandingPage';
 
 
 class App extends Component {
@@ -20,8 +21,8 @@ class App extends Component {
       <div>
         
         
-        
-        <Map>Mapbox</Map>
+        <LandingPage/>
+        <Mapbox>Mapbox</Mapbox>
         
         
        
