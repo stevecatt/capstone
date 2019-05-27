@@ -9,16 +9,21 @@ import { connect } from 'react-redux'
 import * as actionTypes from '../store/actions/actionTypes'
 import axios from 'axios'
 import * as urls from '../utils/urls'
-import '../App.css';
+
 import Weather from './Weather'
+import {Button, Container} from "reactstrap"
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../App.css';
+
+
 
 class Mapbox extends Component {
   constructor(){
     super()
     this.state = {
           viewport: {
-           width: 800,
-           height: 800,
+           width: 400,
+           height: 400,
           latitude: 29.0,
           longitude: -118.0,
            zoom:2
@@ -38,10 +43,7 @@ class Mapbox extends Component {
         sunrise:"",
         sunset:"",
         weatherIcon:"",
-
-
-
-
+        isHovering: false,
         mouseOverId:0,
         weather:{}
       };
@@ -51,6 +53,7 @@ class Mapbox extends Component {
     console.log(key)
     this.setState({
       mouseOverId :key,
+      isHovering:true
       
     })
 
@@ -59,16 +62,37 @@ class Mapbox extends Component {
 
   onMouseOut =()=>{
     this.setState({
-      mouseOverId:0
+      mouseOverId:0,
+      isHovering:false
       
     })
 
    //console.log("what the foo")
   }
 
+  dompolToEnglish =(dompol)=>{
+    // let dompol = "Shitty Air"
+
+      if (dompol == "pm25"){
+        dompol = "Particulates"
+      }
+      else if (dompol == "o3"){
+        dompol = "Ozone"
+      }
+      else if (dompol == "no2"){
+        dompol = "NOx"
+      }
+      else if (dompol =="so2"){
+        dompol = "Sulphur Dioxide"
+      }
+      this.setState({
+        dompol:dompol
+      })
+  }
+
   getUserMarkers=()=>{
     this.setState({
-      marker:[],
+      markers:[],
       markerAqi:[]
     })
     axios.post(urls.getFavorites,{
@@ -78,12 +102,12 @@ class Mapbox extends Component {
       //console.log(markers.data.favorites)
       if(markers.data.favorites.length > 0){
         this.setState({
-          marker:this.state.marker.concat(markers.data.favorites)
+          markers:this.state.markers.concat(markers.data.favorites)
         })
       }
     })
     .then(()=>{
-        this.state.marker.map(llt=>{
+        this.state.markers.map(llt=>{
        // console.log(llt.lat,llt.long,llt.ts)
         //kinda workd but needs to think about duplivate timestamps 
         this.showMarkers(llt.lat,llt.long,llt.ts)
@@ -160,21 +184,22 @@ class Mapbox extends Component {
         o3:json.data.iaqi.o3,
         so2:json.data.iaqi.so2,
         no2:json.data.iaqi.no2,
+        pm10:json.data.iaqi.pm10,
         name:"",
 
         iaqi:json.data.iaqi
       }
 
-      //add data from second call to swiss
-      let markerAqiAndWeather=Object.assign(markerAqi,{test:"test"})
-      console.log(markerAqiAndWeather,"and weather test")
-      console.log(markerAqi)
+      //add data from second call to weather but this dont work yet
+    //   let markerAqiAndWeather=Object.assign(markerAqi,{test:"test"})
+    //   console.log(markerAqiAndWeather,"and weather test")
+    //   console.log(markerAqi)
       this.setState({
         
         markerAqi:this.state.markerAqi.concat(markerAqi),
-        aqi:json.data.aqi,
-        city:json.data.city.name,
-        dompol:json.data.dominentpol
+        // aqi:json.data.aqi,
+        // city:json.data.city.name,
+        // dompol:json.data.dominentpol
         
         
     })
@@ -187,18 +212,20 @@ class Mapbox extends Component {
   removeIcon=(key)=>{
     
     console.log("this the key",key)
-    console.log ("this is marker,",this.state.marker)
+    
 
     let markers= this.state.markers.filter(mark => mark.ts != key)
     
     this.setState({
       markers:markers,
       markerAqi:[]
-    },
-    //the comma and () mean wait till im done with previous step when setting state 
-    () => {
-      
-      markers.map(llt=>{
+    },() => {
+      console.log ("this is updated markers,",this.state.markers)
+      console.log ("these are the markers left",markers)
+    
+      //the comma and () mean wait till im done with previous step when setting state 
+      console.log('feed for show markers',this.state.markers)
+      this.state.markers.map(llt=>{
         console.log("this is the feed to aqi,",llt.lat,llt.long,llt.ts)
         //kinda workd but needs to think about duplivate timestamps 
         this.showMarkers(llt.lat,llt.long,llt.ts)
@@ -210,7 +237,7 @@ class Mapbox extends Component {
     
   
     
-    console.log ("these are the markers left",markers)
+    
     console.log("i clicked the button",key,this.props.userId)
     axios.post(urls.removeFavorite,{
       markerId:key,
@@ -300,10 +327,10 @@ class Mapbox extends Component {
           longitude: position.coords.longitude,
           viewport: {
             width:800,
-            height:800,
+            height:600,
             latitude:position.coords.latitude,
             longitude:position.coords.longitude,
-            zoom:8
+            zoom:6
           }
         })
         this.props.addedHome(position.coords.latitude,position.coords.longitude)
@@ -315,12 +342,17 @@ class Mapbox extends Component {
         fetch(url)
         .then(response => response.json())
         .then((json)=>{
+          console.log(json.data.dominentpol)
+          this.dompolToEnglish(json.data.dominentpol)
           this.setState({
             aqi:json.data.aqi,
             city:json.data.city.name,
-            dompol:json.data.dominentpol
+            
+            
             
         })
+        //console.log(json.data.dominentpol)
+        //this.dompolToEnglish(json.data.dominentpol)
 
         })
         this.getWeather(position.coords.latitude,position.coords.longitude)
@@ -335,13 +367,15 @@ class Mapbox extends Component {
   
   
   render() {
-    
+     
 
     let markerData = this.state.markerAqi.map(data => {
       let pm25=0
+      let pm10=0
       let o3= 0
       let no2=0
       let so2=0
+      let buttonClass="btn-success"
       //account for missing readings
       if (data.pm25==null){
           pm25 = "N/A"
@@ -349,6 +383,12 @@ class Mapbox extends Component {
       else{
            pm25 = data.pm25.v
       }
+      if (data.pm10 == null){
+        pm10 = "N/A"
+      }
+      else{
+         pm10 = data.pm10.v
+       }
       if (data.o3==null){
           o3 = "N/A"
       }
@@ -368,32 +408,82 @@ class Mapbox extends Component {
          so2 = data.so2.v
       }
 
+      
+
+      // change button class per aqi color code
+      if (data.aqi <= 50){
+        buttonClass = "btn-success"
+      }
+      else if (data.aqi > 51  && data.aqi <=100){
+        buttonClass = "yellow"
+      }
+      else if (data.aqi > 101  && data.aqi <=150){
+        buttonClass = "orange"
+      }
+      else if (data.aqi > 151  && data.aqi <=200){
+        buttonClass = "btn-danger"
+      }
+      else if (data.aqi > 201  && data.aqi <=300){
+        buttonClass = "purple"
+      }
+      else if (data.aqi > 301 ) {
+        buttonClass = "gonna-die"
+      }
+      
+
+      // get dompol in english 
+
+      let dompol = "Shitty Air"
+
+      if (data.dompol == "pm25" || data.dompol =="pm10"){
+        dompol = "Particulates"
+      }
+      else if (data.dompol == "o3"){
+        dompol = "Ozone"
+      }
+      else if (data.dompol == "no2"){
+        dompol = "NOx"
+      }
+      else if (data.dompol =="so2"){
+        dompol = "Sulphur Dioxide"
+      }
+
       return (
+       
         <Marker   key={data.ts} latitude={data.lat} longitude={data.long} offsetLeft={-20} offsetTop={-10}>
-        
-         <button  onClick={()=>this.getWeather(data.lat,data.long)} onMouseEnter={()=>this.onMouseIn(data.ts)} onMouseLeave={()=>this.onMouseOut()} onDoubleClick={()=>
+       
+         <button className={buttonClass} onClick={()=>this.getWeather(data.lat,data.long)} onMouseEnter={()=>this.onMouseIn(data.ts)} onMouseLeave={()=>this.onMouseOut()} onDoubleClick={()=>
           this.removeIcon(data.ts)}>
-          {this.state.mouseOverId != data.ts? <span>{data.aqi}</span>:null}
-          {this.state.mouseOverId == data.ts ?
-          <ul>
-          <li>AQI: {data.aqi}</li>
-          <li>Primary Polutant:{data.dompol}</li>
-          <li>Particulates:{pm25}</li>
-          <li>Ozone:{o3}</li>
-          <li>NOx:{no2}</li>
-          <li>Sulfer Dioxide:{so2}</li>
+           <h5>{data.aqi}</h5>
           
-          </ul>: null}
           </button>
+          {
+          this.state.mouseOverId==data.ts?
+          
+            <ul>
+            <li>{data.city}</li>
+            <li>AQI: {data.aqi}</li>
+            <li>Primary Polutant:{dompol}</li>
+            <li>Particulates:{pm25}</li>
+            <li>Lg Particulates:{pm10}</li>
+            <li>Ozone:{o3}</li>
+            <li>NOx:{no2}</li>
+            <li>Sulfer Dioxide:{so2}</li>
+            </ul>
+          
+          :null}
+        
           </Marker>
+          
       )
     })
     
     
     return (
       <div>
+      <Container>
       <ReactMapGL
-        mapStyle="mapbox://styles/mapbox/satellite-streets-v10"
+        mapStyle="mapbox://styles/mapbox/streets-v10"
         mapboxApiAccessToken={MAPBOX_TOKEN}
         {...this.state.viewport}
         onViewportChange={(viewport) => this.setState({viewport})} onClick={this.handleClick}>
@@ -405,16 +495,17 @@ class Mapbox extends Component {
     {markerData}
     </ReactMapGL>
     
+    
     <h1>AQI {this.state.aqi}</h1>
     <h2>{this.state.name}</h2>
     
-    <h2>Polutant:{this.state.dompol}</h2>
+    <h2>Primary Polutant:{this.state.dompol}</h2>
     <img id= "icon" src= {`http://openweathermap.org/img/w/${this.state.weatherIcon}.png`}/>
     <p>Temperature  :{this.state.temperature}</p>
     <p>Wind    :{this.state.windspeed}{this.state.windDirection}</p>
     <p>Sunrise   : {this.state.sunrise}</p>
     <p>Sunset   : {this.state.sunset}</p>
-   
+    </Container>
     </div>
     )
     }

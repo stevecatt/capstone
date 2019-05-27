@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 
 import * as actionTypes from '../store/actions/actionTypes'
 
+
 import { setDefaultBreakpoints } from 'react-socks/';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -16,6 +17,8 @@ import {
   DropdownMenu,
   DropdownItem
 } from 'reactstrap';
+
+
 
 setDefaultBreakpoints([
   { xs: 0 },
@@ -59,10 +62,8 @@ class Menu extends Component {
           <NavbarToggler style={{color:'#076652'}} onClick={this.toggle} />
           <Collapse style={{color:'#076652'}} isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
-            <NavItem><NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar" to="/favorites"> User Map</NavLink></NavItem>
-              <NavItem>
-              {this.props.isAuth ?  <NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar"to="/air-quality"> Weather </NavLink>:null}
-              </NavItem>
+            <NavItem>{this.props.isAuth ? <NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar" to="/userpage"> User Map</NavLink>:null}</NavItem>
+             
               <NavItem>
               {!this.props.isAuth ?<NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar" to="/login"> Login</NavLink>:null}
               </NavItem>

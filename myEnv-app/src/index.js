@@ -12,6 +12,7 @@ import thunk from 'redux-thunk'
 import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import BaseLayout from './components/BaseLayout'
 import requireAuth from './components/requireAuth'
+import { setAuthenticationHeader } from './utils/authenticate'
 import Login from './components/Login'
 import Logout from './components/Logout'
 import Register from './components/Register'
@@ -21,7 +22,7 @@ import LandingPage from './components/LandingPage';
 import Mapbox from './components/Mapbox';
 
 
-
+setAuthenticationHeader(localStorage.getItem('jwtoken'))
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer,composeEnhancers(
@@ -39,7 +40,7 @@ ReactDOM.render(
                     <Route path="/register" component={Register} />
                     <Route path="/login" component={Login} />
                     <Route path ="/weather" component= {Weather}/>
-                    <Route path ="/favorites" component={Mapbox}/>
+                    <Route path ="/userpage" component={Mapbox}/>
                     
                    
                     <Route path="/logout" component={Logout}/>

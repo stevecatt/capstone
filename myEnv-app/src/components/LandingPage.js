@@ -11,6 +11,7 @@ import axios from 'axios'
 import * as urls from '../utils/urls'
 import '../App.css';
 import Weather from './Weather'
+import {Container} from 'reactstrap'
 
 class LandingPage extends Component {
     constructor(){
@@ -110,12 +111,29 @@ class LandingPage extends Component {
 
 
     render(){
+        let dompol = "Shitty Air"
+
+      if (this.state.dompol == "pm25"){
+        dompol = "Particulates"
+      }
+      else if (this.state.dompol == "o3"){
+        dompol = "Ozone"
+      }
+      else if (this.state.dompol == "no2"){
+        dompol = "NOx"
+      }
+      else if (this.state.dompol =="so2"){
+        dompol = "Sulphur Dioxide"
+      }
+
+
         console.log("landed")
         return(
          <div>  
+        <Container>
 
         <ReactMapGL
-        mapStyle="mapbox://styles/mapbox/satellite-streets-v10"
+        mapStyle="mapbox://styles/mapbox/streets-v10"
         mapboxApiAccessToken={MAPBOX_TOKEN}
         {...this.state.viewport}
         onViewportChange={(viewport) => this.setState({viewport})} onClick={this.handleClick}>
@@ -130,12 +148,15 @@ class LandingPage extends Component {
         <h1>AQI {this.state.aqi}</h1>
         <h2>{this.state.name}</h2>
     
-            <h2>Polutant:{this.state.dompol}</h2>
+            <h2>Primary Polutant:{dompol}</h2>
             <img id= "icon" src= {`http://openweathermap.org/img/w/${this.state.weatherIcon}.png`}/>
             <p>Temperature  :{this.state.temperature}</p>
             <p>Wind    :{this.state.windspeed}{this.state.windDirection}</p>
             <p>Sunrise   : {this.state.sunrise}</p>
             <p>Sunset   : {this.state.sunset}</p>
+
+
+         </Container>
    
 
         </div>   
