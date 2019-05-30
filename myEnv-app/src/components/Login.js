@@ -4,6 +4,7 @@ import axios from 'axios'
 import { setAuthenticationHeader } from '../utils/authenticate'
 import * as actionTypes from '../store/actions/actionTypes'
 import * as urls from '../utils/urls'
+import {Button} from "reactstrap"
 
 
 class Login extends Component {
@@ -75,7 +76,7 @@ class Login extends Component {
                 <input type="password" onChange={this.handleTextBoxChange} placeholder="password" name="password" />
                 </div>
                 <div>
-                <button onClick={this.handleSaveUserClick}>Login</button>
+                <Button onClick={this.handleSaveUserClick}>Login</Button>
                 </div>
             </div>
         )

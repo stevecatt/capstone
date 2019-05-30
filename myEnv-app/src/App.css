@@ -29,23 +29,102 @@ li {
 ul {
   background-color:white
 }
+.green {background-color:green;
+color:white;
+
+}
+
+
+.red {background-color:red;
+color:black;
+
+}
 
 .orange {
-  background-color : orange
+  background-color : orange;
+  
+  
 } 
 
 .yellow {
-  background-color :yellow
+  background-color :yellow;
+ 
 }
 
 .purple {
-  background-color : purple
+  background-color : purple;
+
+ 
+  color:white
 }
 .gonna-die {
-  background-color :brown
+  background-color :brown;
+  color:white
+  
+  
+}
+
+.button-margin {
+  margin:5px
+}
+
+.round{
+  border-radius: 50%
+}
+
+.home{
+  border-width:5px;
+  border-color:black
 }
 span {
   background-color:white
+}
+.popup {
+  display: flex;
+  justify-content:center;
+}
+.table-popup {
+  
+  margin-right: 20%;
+  margin-left:20%
+ 
+}
+.map-container {
+  display:flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center
+  
+  
+}
+
+.buttons {
+  padding:15px;
+  display:flex;
+  justify-content:center;
+  align-items: center
+}
+
+.health-warnings {
+  
+  align-items: center;
+  
+  
+}
+.warning-box {
+  display:flex;
+  justify-content:center;
+  flex-direction: column;
+  align-items: center;
+  max-width: 80%;
+  margin-left:10%;
+  margin-right:10%
+  
+  
+
+}
+.warning-box p {
+  text-align: center
 }
 .mapboxMarker {
   background-image: url('./images/mapbox-icon.png');
@@ -56,6 +135,24 @@ span {
   cursor: pointer;
 }
 
+.row {
+  padding-left: 1.5rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.row p {
+  padding-top: 10px;
+  padding-bottom: 15px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-right: 1px solid black;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+#image-data {
+  padding:0;
+
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

@@ -4,16 +4,19 @@ import {Marker} from 'react-map-gl';
 import { MAPBOX_TOKEN } from "../.env.json";
 import { CHINA_KEY } from "../.env.json";
 import { WEATHER_KEY } from "../.env.json"
-import { AIR_KEY } from "../.env.json"
+//import { AIR_KEY } from "../.env.json"
 import { connect } from 'react-redux'
 import * as actionTypes from '../store/actions/actionTypes'
 import axios from 'axios'
 import * as urls from '../utils/urls'
 
-import Weather from './Weather'
-import {Button, Container} from "reactstrap"
+//import Weather from './Weather'
+import {Table,Button, Card, Col,PopoverHeader,PopoverBody,Container} from "reactstrap"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
+import Keycolors from './Keycolors.js';
+import * as funcs from '../utils/functions'
+
 
 
 
@@ -32,7 +35,7 @@ class Mapbox extends Component {
         latitude:0,
         longitude:0,
         aqi:0,
-        no2:0,
+        name:"",
         city:"",
         dompol:"",
         markerAqi:[],
@@ -45,9 +48,28 @@ class Mapbox extends Component {
         weatherIcon:"",
         isHovering: false,
         mouseOverId:0,
-        weather:{}
+        weather:{},
+        pm25:"N/A",
+        pm10:"N/A",
+        no2:"N/A",
+        so2:"N/A",
+        o3:"N/A",
+        homepm25:"N/A",
+        homepm10:"N/A",
+        homeno2:"N/A",
+        homeso2:"N/A",
+        homeo3:"N/A",
+        homeName:"",
+        popoverOpen:false,
+        homeaqi:0
+
       };
   }
+  // toggle=()=>{
+  //   this.setState({
+  //     popoverOpen: !this.state.popoverOpen
+  //   })
+  // }
 
   onMouseIn =(key)=>{
     console.log(key)
@@ -61,28 +83,34 @@ class Mapbox extends Component {
   }
 
   onMouseOut =()=>{
+    //console.log("need to put this bach")
     this.setState({
       mouseOverId:0,
       isHovering:false
       
     })
 
-   //console.log("what the foo")
+   
+  }
+
+  goHome=()=>{
+    console.log("going home")
+
   }
 
   dompolToEnglish =(dompol)=>{
     // let dompol = "Shitty Air"
 
-      if (dompol == "pm25"){
+      if (dompol === "pm25"){
         dompol = "Particulates"
       }
-      else if (dompol == "o3"){
+      else if (dompol === "o3"){
         dompol = "Ozone"
       }
-      else if (dompol == "no2"){
+      else if (dompol === "no2"){
         dompol = "NOx"
       }
-      else if (dompol =="so2"){
+      else if (dompol ==="so2"){
         dompol = "Sulphur Dioxide"
       }
       this.setState({
@@ -108,27 +136,14 @@ class Mapbox extends Component {
     })
     .then(()=>{
         this.state.markers.map(llt=>{
-       // console.log(llt.lat,llt.long,llt.ts)
-        //kinda workd but needs to think about duplivate timestamps 
+      
         this.showMarkers(llt.lat,llt.long,llt.ts)
       })
       
     })
   }
 
-  // getWeather=(lat,long)=>{
-  //   let swissurl = "https://api.airvisual.com/v2/nearest_city?lat="+lat+"&lon="+long+"&key="+AIR_KEY
-  //   fetch(swissurl)
-  //   .then(response=>response.json)
-  //   .then((json)=>{
-  //     console.log("swiss stuff",json)
-  //     this.setState({
-  //       weather:"weather"
-  //     })
-      
-
-  //   })
-  // }
+  
  //move this to common functions 
   getWindDirection = (angle) =>{
     
@@ -137,7 +152,7 @@ class Mapbox extends Component {
    
   }
 
-  getWeather=(lat,long)=>{
+  getWeather=(lat,long,aqi,data)=>{
     let localWeather= "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+long+"&units=imperial&apiKey="+WEATHER_KEY
     fetch(localWeather)
     .then(response=>response.json())
@@ -151,6 +166,7 @@ class Mapbox extends Component {
       let windRound= Math.round(windspeed)
       let temperature =weatherItems.main.temp
       let tempRound = Math.round(temperature)
+      console.log(data,"data input to function")
 
       console.log(weatherItems)
       this.setState({
@@ -160,11 +176,53 @@ class Mapbox extends Component {
         windspeed:windRound,
         windDirection:windDirection,
         weatherIcon:weatherItems.weather[0].icon,
-        name:weatherItems.name
+        name:weatherItems.name,
+        aqi:aqi,
+       
 
 
       })
+      if (data==null){
+        this.setState({
+          pm25:this.state.homepm25,
+          pm10:this.state.homepm10,
+          no2:this.state.homeno2,
+          so2:this.state.homeso2,
+          o3:this.state.homeo3,
 
+        })
+        console.log("no data")
+      }
+      else{
+      if (data.iaqi.o3){
+        this.setState({
+          o3:data.iaqi.o3.v,
+        })
+      }
+      if (data.iaqi.so2){
+        this.setState({
+          so2:data.iaqi.so2.v,
+
+        })
+      }
+      if (data.iaqi.pm10){
+        this.setState({
+          pm10:data.iaqi.pm10.v
+        })
+
+      }
+      if (data.iaqi.pm25){
+        this.setState({
+          pm25:data.iaqi.pm25.v,
+        })
+      }
+      
+      if (data.iaqi.no2){
+        this.setState({
+          no2:data.iaqi.no2.v,
+        })
+      }
+      }
       })
   }
   showMarkers=(lat,long,ts)=>{
@@ -185,6 +243,7 @@ class Mapbox extends Component {
         so2:json.data.iaqi.so2,
         no2:json.data.iaqi.no2,
         pm10:json.data.iaqi.pm10,
+        
         name:"",
 
         iaqi:json.data.iaqi
@@ -214,7 +273,7 @@ class Mapbox extends Component {
     console.log("this the key",key)
     
 
-    let markers= this.state.markers.filter(mark => mark.ts != key)
+    let markers= this.state.markers.filter(mark => mark.ts !== key)
     
     this.setState({
       markers:markers,
@@ -311,7 +370,7 @@ class Mapbox extends Component {
         let lat = markLat
         let long = markLong
        this.showMarkers(lat,long,ts)
-       //this.getWeather(lat,long)
+       
         
         
 
@@ -327,7 +386,7 @@ class Mapbox extends Component {
           longitude: position.coords.longitude,
           viewport: {
             width:800,
-            height:600,
+            height:500,
             latitude:position.coords.latitude,
             longitude:position.coords.longitude,
             zoom:6
@@ -347,15 +406,51 @@ class Mapbox extends Component {
           this.setState({
             aqi:json.data.aqi,
             city:json.data.city.name,
+            homeaqi:json.data.aqi
             
             
+         //need to make this a handy function    
             
         })
+        if (json.data.iaqi.o3){
+          this.setState({
+            o3:json.data.iaqi.o3.v,
+            home03:json.data.iaqi.o3.v,
+          })
+        }
+        if (json.data.iaqi.so2){
+          this.setState({
+            so2:json.data.iaqi.so2.v,
+            homeso2:json.data.iaqi.so2.v,
+
+          })
+        }
+        if (json.data.iaqi.pm10){
+          this.setState({
+            pm10:json.data.iaqi.pm10.v,
+            homepm10:json.data.iaqi.pm10.v,
+          })
+
+        }
+        if (json.data.iaqi.pm25){
+          this.setState({
+            pm25:json.data.iaqi.pm25.v,
+            homepm25:json.data.iaqi.pm25.v,
+          })
+        }
+        
+        if (json.data.iaqi.no2){
+          this.setState({
+            no2:json.data.iaqi.no2.v,
+            homeno2:json.data.iaqi.no2.v,
+          })
+        }
+
         //console.log(json.data.dominentpol)
         //this.dompolToEnglish(json.data.dominentpol)
 
         })
-        this.getWeather(position.coords.latitude,position.coords.longitude)
+        this.getWeather(position.coords.latitude,position.coords.longitude,this.state.aqi,null)
         
       })
     }
@@ -410,24 +505,24 @@ class Mapbox extends Component {
 
       
 
-      // change button class per aqi color code
+      // change button class per aqi color code should make a function of this to use for both page
       if (data.aqi <= 50){
-        buttonClass = "btn-success"
+        buttonClass = "round green"
       }
       else if (data.aqi > 51  && data.aqi <=100){
-        buttonClass = "yellow"
+        buttonClass = "round yellow"
       }
       else if (data.aqi > 101  && data.aqi <=150){
-        buttonClass = "orange"
+        buttonClass = "round orange"
       }
       else if (data.aqi > 151  && data.aqi <=200){
-        buttonClass = "btn-danger"
+        buttonClass = "round red"
       }
       else if (data.aqi > 201  && data.aqi <=300){
-        buttonClass = "purple"
+        buttonClass = "round purple"
       }
       else if (data.aqi > 301 ) {
-        buttonClass = "gonna-die"
+        buttonClass = "round gonna-die"
       }
       
 
@@ -435,78 +530,167 @@ class Mapbox extends Component {
 
       let dompol = "Shitty Air"
 
-      if (data.dompol == "pm25" || data.dompol =="pm10"){
+      if (data.dompol == "pm25"){
         dompol = "Particulates"
+       
+      }
+
+      else if (data.dompol==="pm10"){
+        dompol="Lg Particulates"
       }
       else if (data.dompol == "o3"){
         dompol = "Ozone"
+       
       }
       else if (data.dompol == "no2"){
         dompol = "NOx"
+        
       }
       else if (data.dompol =="so2"){
         dompol = "Sulphur Dioxide"
+        
       }
 
       return (
-       
+       <div>
         <Marker   key={data.ts} latitude={data.lat} longitude={data.long} offsetLeft={-20} offsetTop={-10}>
        
-         <button className={buttonClass} onClick={()=>this.getWeather(data.lat,data.long)} onMouseEnter={()=>this.onMouseIn(data.ts)} onMouseLeave={()=>this.onMouseOut()} onDoubleClick={()=>
+         <button id={data.ts} className={buttonClass} onClick={()=>this.getWeather(data.lat,data.long,data.aqi,data)} onMouseEnter={()=>this.onMouseIn(data.ts)} onMouseLeave={()=>this.onMouseOut()} onDoubleClick={()=>
           this.removeIcon(data.ts)}>
-           <h5>{data.aqi}</h5>
+           {data.aqi}
           
           </button>
-          {
-          this.state.mouseOverId==data.ts?
-          
-            <ul>
-            <li>{data.city}</li>
-            <li>AQI: {data.aqi}</li>
-            <li>Primary Polutant:{dompol}</li>
-            <li>Particulates:{pm25}</li>
-            <li>Lg Particulates:{pm10}</li>
-            <li>Ozone:{o3}</li>
-            <li>NOx:{no2}</li>
-            <li>Sulfer Dioxide:{so2}</li>
-            </ul>
-          
-          :null}
+         
         
           </Marker>
+
+          {
+          this.state.mouseOverId===data.ts?
+          <div className="popup">
+
+          <div className="table-popup">
+          <Table className="table"> 
+             <thead className={buttonClass}>
+              <tr>
+                <th>Aqi</th>
+                <th>Primary Polutant</th>
+                <th>Ozone</th>
+                <th>Particulates 25</th>
+                <th>Particulates 10</th>
+                <th>NOx</th>
+                <th>Sulphur Dioxide</th>
+             
+           </tr>
+           </thead>
+           <tbody className={buttonClass}>
+             <tr>
+               <td>{data.aqi}</td>
+               <td>{dompol}</td>
+               <td>{o3}</td>
+               <td>{pm25}</td>
+               <td>{pm10}</td>
+               <td>{no2}</td>
+               <td>{so2}</td>
+               
+             </tr>
+           </tbody>
+           
+        
+          </Table>
+          </div>
+          </div>
+          
+        
+          :null}
+
+          </div>
           
       )
     })
-    
+    let home = 1
+    let buttonClass=funcs.buttonClassFunction(this.state.homeaqi,home)
     
     return (
-      <div>
+      
       <Container>
+       <Table className = "table">
+       <thead>
+            <tr>
+               <th>Weather Station</th>
+               <th></th>
+               <th>AQI</th>
+               <th>Temp</th>
+               <th>Wind</th>
+               <th>Sunrise</th>
+               <th>Sunset</th>
+             </tr>
+             </thead>
+             <tbody>
+               <tr>
+                 <td>{this.state.name}</td>
+               <td id="image-data"><img id= "icon" src= {`http://openweathermap.org/img/w/${this.state.weatherIcon}.png`}/></td>
+                 <td>{this.state.aqi}</td>
+                
+                 <td>{this.state.temperature}</td>
+                 <td>{this.state.windspeed}{this.state.windDirection}</td>
+                 <td>{this.state.sunrise}</td>
+                 <td>{this.state.sunset}</td>
+               </tr>
+             </tbody>
+             <thead>
+            <tr>
+               
+               <th>Primary Polutant</th>
+               <th>Ozone</th>
+               <th>Particulates pm25</th>
+               <th>Particulates pm10</th>
+               <th>NOx</th>
+               <th>Sulphur Dioxide</th>
+               
+             </tr>
+             </thead>
+             <tbody>
+               <tr>
+                
+                 <td>{this.state.dompol}</td>
+                 <td>{this.state.o3}</td>
+                 <td>{this.state.pm25}</td>
+                 <td>{this.state.pm10}</td>
+                 <td>{this.state.no2}</td>
+                 <td>{this.state.so2}</td>
+                 
+               </tr>
+             </tbody>
+          
+       </Table>
+       <div className="map-container">
       <ReactMapGL
         mapStyle="mapbox://styles/mapbox/streets-v10"
         mapboxApiAccessToken={MAPBOX_TOKEN}
         {...this.state.viewport}
         onViewportChange={(viewport) => this.setState({viewport})} onClick={this.handleClick}>
      <Marker latitude={this.props.latitude} longitude={this.props.longitude} offsetLeft={-20} offsetTop={-10}>
-      <img src='https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'/>
+     
+      <button className={buttonClass} onClick={()=>this.getWeather(this.props.latitude,this.props.longitude,this.state.homeaqi,null)}>{this.state.homeaqi}</button>
      
     </Marker>
     
     {markerData}
     </ReactMapGL>
-    
-    
-    <h1>AQI {this.state.aqi}</h1>
-    <h2>{this.state.name}</h2>
-    
-    <h2>Primary Polutant:{this.state.dompol}</h2>
-    <img id= "icon" src= {`http://openweathermap.org/img/w/${this.state.weatherIcon}.png`}/>
-    <p>Temperature  :{this.state.temperature}</p>
-    <p>Wind    :{this.state.windspeed}{this.state.windDirection}</p>
-    <p>Sunrise   : {this.state.sunrise}</p>
-    <p>Sunset   : {this.state.sunset}</p>
-    </Container>
+    <Keycolors></Keycolors>
     </div>
+   
+
+    
+   
+
+    </Container>
+    
+    
+  
+   
+    
+    
     )
     }
 }
