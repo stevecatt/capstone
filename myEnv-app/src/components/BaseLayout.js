@@ -15,7 +15,7 @@ import {
   Collapse, NavLink,Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,Row,Col,Container
 } from 'reactstrap';
 
 
@@ -56,11 +56,11 @@ class Menu extends Component {
 
     render(){
         return(
-          <div className="container">
+         
         <Navbar  light style={{color:'#076652'}} expand="md">
           <NavbarBrand style={{color:'#076652'}} tag={RRNavLink} to="/"> Home</NavbarBrand>
           <NavbarToggler style={{color:'#076652'}} onClick={this.toggle} />
-          <Collapse style={{color:'#076652'}} isOpen={this.state.isOpen} navbar>
+          <Collapse style={{color:'#076652'}} isOpen={!this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
             <NavItem>{this.props.isAuth ? <NavLink style={{color:'#076652'}} tag={RRNavLink} className="font-weight-bold topbar" to="/userpage"> User Map</NavLink>:null}</NavItem>
              
@@ -77,7 +77,7 @@ class Menu extends Component {
             </Nav>
           </Collapse>
         </Navbar>
-      </div>
+      
     );
   }
 }
@@ -88,7 +88,7 @@ class Footer extends Component {
 
     render() {
       return (
-        <div className="footer container">Copyright 2019</div>
+        <div className="footer">Copyright 2019</div>
       )
     }
   
@@ -104,11 +104,17 @@ class Footer extends Component {
   
     render() {
       return (
-        <div>
+        <Container className="page-container">
+          
           <Menu isAuth = {this.props.isAuth}/>
+          
+          
             {this.props.children}
+          
+          
           <Footer/>
-        </div>
+         
+        </Container>
       )
     }
   

@@ -11,7 +11,7 @@ import axios from 'axios'
 import * as urls from '../utils/urls'
 import '../App.css';
 import Weather from './Weather'
-import {Table,Container} from 'reactstrap'
+import {Table,Container,Row,Col} from 'reactstrap'
 import * as funcs from '../utils/functions'
 import Keycolors from './Keycolors'
 
@@ -231,8 +231,9 @@ class LandingPage extends Component {
              </tbody>
           
        </Table>
+       <Row>
 
-       <div className="map-container">
+       <Col className="map-container">
 
         <ReactMapGL
         mapStyle="mapbox://styles/mapbox/streets-v10"
@@ -246,8 +247,11 @@ class LandingPage extends Component {
     
    
         </ReactMapGL>
+        </Col>
+        <Col>
         <Keycolors></Keycolors>
-        </div>
+        </Col>
+        </Row>
 
         
 

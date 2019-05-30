@@ -32,6 +32,7 @@ class Login extends Component {
       }
 
       handleSaveUserClick = () => {
+        console.log("Wheres the click")
       axios.post(urls.login, {
        
           
@@ -76,7 +77,7 @@ class Login extends Component {
                 <input type="password" onChange={this.handleTextBoxChange} placeholder="password" name="password" />
                 </div>
                 <div>
-                <Button onClick={this.handleSaveUserClick}>Login</Button>
+                <Button color="primary" onClick={this.handleSaveUserClick}>Login</Button>
                 </div>
             </div>
         )
