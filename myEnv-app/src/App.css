@@ -147,9 +147,14 @@ span {
 
 
 }
+.log-reg {text-align: center}
+
+.container {
+  background-image:url('./utils/images/diamond.jpg')
+}
 
 .mapboxMarker {
-  background-image: url('./images/mapbox-icon.png');
+  background-image: url('./utils/images/mapbox-icon.png');
   background-size: cover;
   width: 50px;
   height: 50px;

@@ -70,7 +70,7 @@ class Register extends Component {
 
     render(){
         return(
-            <div className="container">
+            <div className="log-reg">
             <div>
             <h1>Register</h1>
             <h2>{this.state.message}</h2>

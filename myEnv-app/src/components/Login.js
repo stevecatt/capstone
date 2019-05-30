@@ -7,6 +7,8 @@ import * as urls from '../utils/urls'
 import {Button} from "reactstrap"
 
 
+
+
 class Login extends Component {
     constructor(){
         super()
@@ -69,7 +71,7 @@ class Login extends Component {
 
     render(){
         return(
-            <div className="container">
+            <div className="log-reg">
                <div>
                <h1>Login</h1>
                <h2>{this.state.message}</h2>
