@@ -46,9 +46,9 @@ class Register extends Component {
       .then(response =>  {
           if(response.data.exists) {
             console.log("user exists")
-            let message= response.data.exists
+            
             this.setState({
-              message:"Sorry Username Exists"
+              message:"Sorry User Exists"
             })
 
 
@@ -79,7 +79,7 @@ class Register extends Component {
             <input type="password" onChange={this.handleTextBoxChange} placeholder="password" name="password" />
             </div>
             <div>
-            <Button onClick={this.handleSaveUserClick}>Register</Button>
+            <Button color="primary" onClick={this.handleSaveUserClick}>Register</Button>
             </div>
             </div>
         )

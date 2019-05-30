@@ -65,7 +65,8 @@ color:black;
 }
 
 .button-margin {
-  margin:5px
+  margin:5px;
+  max-width:130px
 }
 
 .round{
@@ -91,34 +92,39 @@ span {
 }
 .map-container {
   display:flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center
+  justify-content: right;
+  flex-direction: row;
+  align-items:right
+  
   
   
 }
 
-.buttons {
+.code-buttons {
   padding:15px;
   display:flex;
-  justify-content:center;
-  align-items: center
+  
+  
+  flex-direction: column
 }
 
 .health-warnings {
+  display:flex;
   
-  align-items: center;
+  flex-direction: column;
+  
   
   
 }
+
 .warning-box {
   display:flex;
   justify-content:center;
   flex-direction: column;
-  align-items: center;
-  max-width: 80%;
-  margin-left:10%;
-  margin-right:10%
+  margin-left:auto;
+  max-width: auto;
+ 
+  
   
   
 
@@ -153,6 +159,8 @@ span {
   padding:0;
 
 }
+
+.footer {  position: absolute;  bottom: 0;  width: 100%;  height: 2.5rem; }
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

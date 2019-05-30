@@ -11,7 +11,7 @@ import axios from 'axios'
 import * as urls from '../utils/urls'
 
 //import Weather from './Weather'
-import {Table,Button, Card, Col,PopoverHeader,PopoverBody,Container} from "reactstrap"
+import {Table,Button,Row, Card, Col,PopoverHeader,PopoverBody,Container} from "reactstrap"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
 import Keycolors from './Keycolors.js';
@@ -25,8 +25,8 @@ class Mapbox extends Component {
     super()
     this.state = {
           viewport: {
-           width: 400,
-           height: 400,
+           width: 800,
+           height: 450,
           latitude: 29.0,
           longitude: -118.0,
            zoom:2
@@ -386,7 +386,7 @@ class Mapbox extends Component {
           longitude: position.coords.longitude,
           viewport: {
             width:800,
-            height:500,
+            height:450,
             latitude:position.coords.latitude,
             longitude:position.coords.longitude,
             zoom:6
@@ -612,7 +612,7 @@ class Mapbox extends Component {
     
     return (
       
-      <Container>
+      <div>
        <Table className = "table">
        <thead>
             <tr>
@@ -663,7 +663,8 @@ class Mapbox extends Component {
              </tbody>
           
        </Table>
-       <div className="map-container">
+       <Row>
+       <Col className="map-container">
       <ReactMapGL
         mapStyle="mapbox://styles/mapbox/streets-v10"
         mapboxApiAccessToken={MAPBOX_TOKEN}
@@ -677,14 +678,17 @@ class Mapbox extends Component {
     
     {markerData}
     </ReactMapGL>
+    </Col>
+    <Col>
     <Keycolors></Keycolors>
-    </div>
-   
+    </Col>
+    </Row>
+   </div>
 
     
    
 
-    </Container>
+   
     
     
   
