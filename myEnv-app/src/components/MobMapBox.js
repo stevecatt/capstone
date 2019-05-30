@@ -16,28 +16,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
 import Keycolors from './Keycolors.js';
 import * as funcs from '../utils/functions'
-import Breakpoint, { BreakpointProvider } from 'react-socks';
-import { setDefaultBreakpoints } from 'react-socks';
-import MobMapBox from './MobMapBox'
-
-
-setDefaultBreakpoints([
-  { xs: 0 },
-  { s: 376 },
-  { m: 500},
-  { l: 769 },
-  { xl: 1025 }
-]);
 
 
 
-class Mapbox extends Component {
+
+class MobMapBox extends Component {
   constructor(){
     super()
     this.state = {
           viewport: {
-           width: 800,
-           height: 450,
+           width: 350,
+           height: 350,
           latitude: 29.0,
           longitude: -118.0,
            zoom:2
@@ -396,8 +385,8 @@ class Mapbox extends Component {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           viewport: {
-            width:800,
-            height:450,
+            width:350,
+            height:350,
             latitude:position.coords.latitude,
             longitude:position.coords.longitude,
             zoom:6
@@ -575,44 +564,7 @@ class Mapbox extends Component {
         
           </Marker>
 
-          {
-          this.state.mouseOverId===data.ts?
-          <div className="popup">
-
-          <div className="table-popup">
-          <Table className="table"> 
-             <thead className={buttonClass}>
-              <tr>
-                <th>Aqi</th>
-                <th>Primary Polutant</th>
-                <th>Ozone</th>
-                <th>Particulates 25</th>
-                <th>Particulates 10</th>
-                <th>NOx</th>
-                <th>Sulphur Dioxide</th>
-             
-           </tr>
-           </thead>
-           <tbody className={buttonClass}>
-             <tr>
-               <td>{data.aqi}</td>
-               <td>{dompol}</td>
-               <td>{o3}</td>
-               <td>{pm25}</td>
-               <td>{pm10}</td>
-               <td>{no2}</td>
-               <td>{so2}</td>
-               
-             </tr>
-           </tbody>
-           
-        
-          </Table>
-          </div>
-          </div>
           
-        
-          :null}
 
           </div>
           
@@ -624,7 +576,6 @@ class Mapbox extends Component {
     return (
       
       <div>
-        <Breakpoint l up>
        <Table className = "table">
        <thead>
             <tr>
@@ -632,9 +583,7 @@ class Mapbox extends Component {
                <th></th>
                <th>AQI</th>
                <th>Temp</th>
-               <th>Wind</th>
-               <th>Sunrise</th>
-               <th>Sunset</th>
+               <th>Primary Polutant</th>
              </tr>
              </thead>
              <tbody>
@@ -644,35 +593,11 @@ class Mapbox extends Component {
                  <td>{this.state.aqi}</td>
                 
                  <td>{this.state.temperature}</td>
-                 <td>{this.state.windspeed}{this.state.windDirection}</td>
-                 <td>{this.state.sunrise}</td>
-                 <td>{this.state.sunset}</td>
-               </tr>
-             </tbody>
-             <thead>
-            <tr>
-               
-               <th>Primary Polutant</th>
-               <th>Ozone</th>
-               <th>Particulates pm25</th>
-               <th>Particulates pm10</th>
-               <th>NOx</th>
-               <th>Sulphur Dioxide</th>
-               
-             </tr>
-             </thead>
-             <tbody>
-               <tr>
-                
                  <td>{this.state.dompol}</td>
-                 <td>{this.state.o3}</td>
-                 <td>{this.state.pm25}</td>
-                 <td>{this.state.pm10}</td>
-                 <td>{this.state.no2}</td>
-                 <td>{this.state.so2}</td>
                  
                </tr>
              </tbody>
+             
           
        </Table>
        <Row>
@@ -695,11 +620,6 @@ class Mapbox extends Component {
     <Keycolors></Keycolors>
     </Col>
     </Row>
-    </Breakpoint>
-    <Breakpoint m down>
-    <MobMapBox></MobMapBox>
-    </Breakpoint>
-
    </div>
 
     
@@ -731,4 +651,4 @@ class Mapbox extends Component {
     }
     
 
-export default connect(mapStateToProps,mapDispatchToProps)(Mapbox)
+export default connect(mapStateToProps,mapDispatchToProps)(MobMapBox)

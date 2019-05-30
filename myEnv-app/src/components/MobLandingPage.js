@@ -16,7 +16,6 @@ import * as funcs from '../utils/functions'
 import Keycolors from './Keycolors'
 import Breakpoint, { BreakpointProvider } from 'react-socks';
 import { setDefaultBreakpoints } from 'react-socks';
-import MobLandingPage from './MobLandingPage'
 
 setDefaultBreakpoints([
   { xs: 0 },
@@ -26,14 +25,14 @@ setDefaultBreakpoints([
   { xl: 1025 }
 ]);
 
-class LandingPage extends Component {
+class MobLandingPage extends Component {
     constructor(){
         super()
         this.state={
             
                 viewport: {
-                 width: 800,
-                 height: 500,
+                 width: 350,
+                 height: 350,
                 latitude: 29.0,
                 longitude: -118.0,
                  zoom:2
@@ -95,8 +94,8 @@ class LandingPage extends Component {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
                     viewport: {
-                     width:800,
-                    height:500,
+                     width:350,
+                    height:350,
                     latitude:position.coords.latitude,
                     longitude:position.coords.longitude,
                     zoom:10
@@ -193,11 +192,10 @@ class LandingPage extends Component {
 
         console.log("landed")
         return(
-          
          <div>  
-        <Breakpoint l up>
         <Container>
-          
+        
+       
         <Table className = "table">
        <thead>
             <tr>
@@ -205,9 +203,8 @@ class LandingPage extends Component {
                <th></th>
                <th>AQI</th>
                <th>Temp</th>
-               <th>Wind</th>
-               <th>Sunrise</th>
-               <th>Sunset</th>
+               <th>Primary Polutant</th>
+              
              </tr>
              </thead>
              <tbody>
@@ -216,38 +213,13 @@ class LandingPage extends Component {
                  <td id="image-data"><img id= "icon" src= {`http://openweathermap.org/img/w/${this.state.weatherIcon}.png`}/></td>
                  <td>{this.state.aqi}</td>
                  <td>{this.state.temperature}</td>
-                 <td>{this.state.windspeed}{this.state.windDirection}</td>
-                 <td>{this.state.sunrise}</td>
-                 <td>{this.state.sunset}</td>
-               </tr>
-             </tbody>
-             <thead>
-            <tr>
-               
-               <th>Primary Polutant</th>
-               <th>Ozone</th>
-               <th>Particulates</th>
-               <th>NOx</th>
-               <th>Sulphur Dioxide</th>
-               
-             </tr>
-             </thead>
-             <tbody>
-               <tr>
-                
                  <td>{dompol}</td>
-                 <td>{this.state.o3}</td>
-                 <td>{this.state.pm25}</td>
-                 <td>{this.state.no2}</td>
-                 <td>{this.state.so2}</td>
                  
                </tr>
              </tbody>
+             
           
        </Table>
-       
-     
-       
        
        <Row>
 
@@ -270,17 +242,13 @@ class LandingPage extends Component {
        
         </Col>
         <Col>
-        <Keycolors></Keycolors>
+       <Keycolors></Keycolors>
         </Col>
         </Row>
 
         
 
          </Container>
-         </Breakpoint>
-         <Breakpoint m down>
-         <MobLandingPage></MobLandingPage>
-         </Breakpoint>
    
 
         </div>   
@@ -305,4 +273,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(LandingPage)
+export default connect(mapStateToProps,mapDispatchToProps)(MobLandingPage)
