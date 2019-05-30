@@ -116,6 +116,15 @@ span {
   
   
 }
+.mob-health-warnings {
+  display:flex;
+ 
+  flex-direction: column;
+  
+  
+  
+}
+
 
 .warning-box {
   display:flex;
@@ -123,15 +132,22 @@ span {
   flex-direction: column;
   margin-left:auto;
   max-width: auto;
- 
-  
-  
-  
+  text-align: center
+
 
 }
-.warning-box p {
+.mob-warning-box {
+  margin-top:5px;
+  display:flex;
+  justify-content:center;
+  flex-direction: column;
+  margin-left:auto;
+  max-width: auto;
   text-align: center
+
+
 }
+
 .mapboxMarker {
   background-image: url('./images/mapbox-icon.png');
   background-size: cover;
@@ -139,6 +155,10 @@ span {
   height: 50px;
   border-radius: 50%;
   cursor: pointer;
+}
+
+.small-map {
+  max-width: 400px;
 }
 
 .row {
@@ -160,7 +180,9 @@ span {
 
 }
 
-.footer {  position: absolute;  bottom: 0;  width: 100%;  height: 2.5rem; }
+.footer {  position: relative;  bottom: 0;  width: 100%;  height: 2.5rem;
+  text-align: center;
+ }
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

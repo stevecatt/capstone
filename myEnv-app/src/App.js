@@ -4,11 +4,11 @@ import './App.css';
 import Login from './components/Login';
 import Register from './components/Register';
 import Mapbox from './components/Mapbox'
-import MapContainer from './components/GoogleMap'
+//import MapContainer from './components/GoogleMap'
 //import GoogleMapsContainer from './components/TestMap'
 
 import 'mapbox-gl/dist/mapbox-gl.css';
-import Weather from './components/Weather';
+//import Weather from './components/Weather';
 import LandingPage from './components/LandingPage';
 
 
