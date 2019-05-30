@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 import * as actionTypes from '../store/actions/actionTypes'
 import * as urls from '../utils/urls'
+import {Button} from "reactstrap"
 
 class Register extends Component {
     constructor(){
@@ -78,7 +79,7 @@ class Register extends Component {
             <input type="password" onChange={this.handleTextBoxChange} placeholder="password" name="password" />
             </div>
             <div>
-            <button onClick={this.handleSaveUserClick}>Register</button>
+            <Button onClick={this.handleSaveUserClick}>Register</Button>
             </div>
             </div>
         )

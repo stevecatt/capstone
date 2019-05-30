@@ -11,7 +11,9 @@ import axios from 'axios'
 import * as urls from '../utils/urls'
 import '../App.css';
 import Weather from './Weather'
-import {Container} from 'reactstrap'
+import {Table,Container} from 'reactstrap'
+import * as funcs from '../utils/functions'
+import Keycolors from './Keycolors'
 
 class LandingPage extends Component {
     constructor(){
@@ -19,12 +21,18 @@ class LandingPage extends Component {
         this.state={
             
                 viewport: {
-                 width: 400,
-                 height: 400,
+                 width: 800,
+                 height: 500,
                 latitude: 29.0,
                 longitude: -118.0,
                  zoom:2
               },
+              pm25:"N/A",
+              pm10:"N/A",
+              no2:"N/A",
+              so2:"N/A",
+              o3:"N/A",
+
 
         }
         
@@ -76,11 +84,11 @@ class LandingPage extends Component {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
                     viewport: {
-                     width:400,
-                    height:400,
+                     width:800,
+                    height:500,
                     latitude:position.coords.latitude,
                     longitude:position.coords.longitude,
-                    zoom:8
+                    zoom:10
                     }
                 })
                 this.props.addedHome(position.coords.latitude,position.coords.longitude)
@@ -91,12 +99,42 @@ class LandingPage extends Component {
                 fetch(url)
                  .then(response => response.json())
                 .then((json)=>{
+                  console.log("china",json)
                 this.setState({
                         aqi:json.data.aqi,
                         city:json.data.city.name,
-                        dompol:json.data.dominentpol
+                        dompol:json.data.dominentpol,
+                        
             
                 })
+                if (json.data.iaqi.o3){
+                  this.setState({
+                    o3:json.data.iaqi.o3.v,
+                  })
+                }
+                if (json.data.iaqi.so2){
+                  this.setState({
+                    so2:json.data.iaqi.so2.v,
+
+                  })
+                }
+                if (json.data.iaqi.pm10){
+                  this.setState({
+                    pm10:json.data.iaqi.pm10.v
+                  })
+
+                }
+                if (json.data.iaqi.pm25){
+                  this.setState({
+                    pm25:json.data.iaqi.pm25.v,
+                  })
+                }
+                
+                if (json.data.iaqi.no2){
+                  this.setState({
+                    no2:json.data.iaqi.no2.v,
+                  })
+                }
 
         })
         this.getWeather(position.coords.latitude,position.coords.longitude)
@@ -111,19 +149,34 @@ class LandingPage extends Component {
 
 
     render(){
+      let home=1
+
+      let buttonClass=funcs.buttonClassFunction(this.state.aqi,home)
+
+      
+
+   
+
         let dompol = "Shitty Air"
 
-      if (this.state.dompol == "pm25"){
+      if (this.state.dompol === "pm25"){
         dompol = "Particulates"
+       
       }
-      else if (this.state.dompol == "o3"){
+      else if (this.state.dompol==="pm10"){
+        dompol = "particulates"
+      }
+      else if (this.state.dompol === "o3"){
         dompol = "Ozone"
+        
       }
-      else if (this.state.dompol == "no2"){
+      else if (this.state.dompol === "no2"){
         dompol = "NOx"
+       
       }
-      else if (this.state.dompol =="so2"){
+      else if (this.state.dompol ==="so2"){
         dompol = "Sulphur Dioxide"
+       
       }
 
 
@@ -131,6 +184,55 @@ class LandingPage extends Component {
         return(
          <div>  
         <Container>
+        <Table className = "table">
+       <thead>
+            <tr>
+               <th>Weather Station</th>
+               <th></th>
+               <th>AQI</th>
+               <th>Temp</th>
+               <th>Wind</th>
+               <th>Sunrise</th>
+               <th>Sunset</th>
+             </tr>
+             </thead>
+             <tbody>
+               <tr>
+                <td>{this.state.name}</td>
+                 <td id="image-data"><img id= "icon" src= {`http://openweathermap.org/img/w/${this.state.weatherIcon}.png`}/></td>
+                 <td>{this.state.aqi}</td>
+                 <td>{this.state.temperature}</td>
+                 <td>{this.state.windspeed}{this.state.windDirection}</td>
+                 <td>{this.state.sunrise}</td>
+                 <td>{this.state.sunset}</td>
+               </tr>
+             </tbody>
+             <thead>
+            <tr>
+               
+               <th>Primary Polutant</th>
+               <th>Ozone</th>
+               <th>Particulates</th>
+               <th>NOx</th>
+               <th>Sulphur Dioxide</th>
+               
+             </tr>
+             </thead>
+             <tbody>
+               <tr>
+                
+                 <td>{dompol}</td>
+                 <td>{this.state.o3}</td>
+                 <td>{this.state.pm25}</td>
+                 <td>{this.state.no2}</td>
+                 <td>{this.state.so2}</td>
+                 
+               </tr>
+             </tbody>
+          
+       </Table>
+
+       <div className="map-container">
 
         <ReactMapGL
         mapStyle="mapbox://styles/mapbox/streets-v10"
@@ -138,23 +240,16 @@ class LandingPage extends Component {
         {...this.state.viewport}
         onViewportChange={(viewport) => this.setState({viewport})} onClick={this.handleClick}>
         <Marker latitude={this.props.latitude} longitude={this.props.longitude} offsetLeft={-20} offsetTop={-10}>
-         <img src='https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'/>
-     
+      
+          <button className={buttonClass}>{this.state.aqi}</button>
         </Marker>
     
    
         </ReactMapGL>
+        <Keycolors></Keycolors>
+        </div>
 
-        <h1>AQI {this.state.aqi}</h1>
-        <h2>{this.state.name}</h2>
-    
-            <h2>Primary Polutant:{dompol}</h2>
-            <img id= "icon" src= {`http://openweathermap.org/img/w/${this.state.weatherIcon}.png`}/>
-            <p>Temperature  :{this.state.temperature}</p>
-            <p>Wind    :{this.state.windspeed}{this.state.windDirection}</p>
-            <p>Sunrise   : {this.state.sunrise}</p>
-            <p>Sunset   : {this.state.sunset}</p>
-
+        
 
          </Container>
    
