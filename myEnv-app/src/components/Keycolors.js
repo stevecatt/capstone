@@ -137,13 +137,13 @@ onModerateMouseIn =()=>{
       <span className="yellow warning-box">
       <strong>AQI Moderate: 51-100</strong>
       <br/>
-      Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution.
+      Air quality is acceptable; however, for some pollutants there may be a moderate health concern for people who are unusually sensitive to air pollution.
       </span>:null}     
       {this.state.isUhgMouse===true?
       <span className="orange warning-box">
       <strong>AQI Unhealthy for Sensitive Groups: 101-150</strong>
       <br></br>
-      Although general public is not likely to be affected at this AQI range, people with lung disease, older adults and children are at a greater risk from exposure to ozone, whereas persons with heart and lung disease, older adults and children are at greater risk from the presence of particles in the air.
+      People with heart and lung disease, older adults and children are at greater risk from the presence of particles in the air and ozone.
       
       </span>:null}     
       {this.state. isUnhealthyMouse===true?
@@ -185,13 +185,13 @@ onModerateMouseIn =()=>{
       <span className="yellow mob-warning-box">
       <strong>AQI Moderate: 51-100</strong>
       <br/>
-      Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution.
+      Air quality is acceptable; however, for some pollutants there may be a moderate health concern for people who are unusually sensitive to air pollution.
       </span>  
      
       <span className="orange mob-warning-box">
       <strong>AQI Unhealthy for Sensitive Groups: 101-150</strong>
       <br></br>
-      Although general public is not likely to be affected at this AQI range, people with lung disease, older adults and children are at a greater risk from exposure to ozone, whereas persons with heart and lung disease, older adults and children are at greater risk from the presence of particles in the air.
+      People with heart and lung disease, older adults and children are at greater risk from the presence of particles in the air and ozone.
       
       </span>
       
