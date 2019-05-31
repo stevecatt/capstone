@@ -210,7 +210,7 @@ class MobLandingPage extends Component {
              <tbody>
                <tr>
                 <td>{this.state.name}</td>
-                 <td id="image-data"><img id= "icon" src= {`http://openweathermap.org/img/w/${this.state.weatherIcon}.png`}/></td>
+                 <td id="image-data"><img id= "icon" src= {`https://openweathermap.org/img/w/${this.state.weatherIcon}.png`}/></td>
                  <td>{this.state.aqi}</td>
                  <td>{this.state.temperature}</td>
                  <td>{dompol}</td>
