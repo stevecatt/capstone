@@ -6,19 +6,19 @@ export  function buttonClassFunction(aqi,home){
     if (aqi <= 50){
         buttonClass = "round green home"
       }
-      else if (aqi > 51  && aqi <=100){
+      else if (aqi => 51  && aqi <=100){
         buttonClass = "round yellow home"
       }
-      else if (aqi > 101  && aqi <=150){
+      else if (aqi => 101  && aqi <=150){
         buttonClass = "round orange home"
       }
-      else if (aqi > 151  && aqi <=200){
+      else if (aqi => 151  && aqi <=200){
         buttonClass = "round red home"
       }
-      else if (aqi > 201  && aqi <=300){
+      else if (aqi => 201  && aqi <=300){
         buttonClass = "round purple home"
       }
-      else if (aqi > 301 ) {
+      else if (aqi => 301 ) {
         buttonClass = "round gonna-die home"
       }
       return buttonClass
@@ -27,19 +27,19 @@ export  function buttonClassFunction(aqi,home){
         if (aqi <= 50){
             buttonClass = "round green"
           }
-          else if (aqi > 51  && aqi <=100){
+          else if (aqi > 50  && aqi <=100){
             buttonClass = "round yellow"
           }
-          else if (aqi > 101  && aqi <=150){
+          else if (aqi > 100  && aqi <=150){
             buttonClass = "round orange"
           }
-          else if (aqi > 151  && aqi <=200){
+          else if (aqi > 150  && aqi <=200){
             buttonClass = "round red"
           }
-          else if (aqi > 201  && aqi <=300){
+          else if (aqi > 200 && aqi <=300){
             buttonClass = "round purple"
           }
-          else if (aqi > 301 ) {
+          else if (aqi > 300) {
             buttonClass = "round gonna-die"
           }
           return buttonClass

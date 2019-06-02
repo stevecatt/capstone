@@ -71,7 +71,7 @@ class LandingPage extends Component {
       let temperature =weatherItems.main.temp
       let tempRound = Math.round(temperature)
 
-      console.log(weatherItems)
+      //console.log(weatherItems)
       this.setState({
         temperature:tempRound,
         sunrise:sunrise,
@@ -110,7 +110,7 @@ class LandingPage extends Component {
                 fetch(url)
                  .then(response => response.json())
                 .then((json)=>{
-                  console.log("china",json)
+                  //console.log("china",json)
                 this.setState({
                         aqi:json.data.aqi,
                         city:json.data.city.name,
@@ -191,7 +191,7 @@ class LandingPage extends Component {
       }
 
 
-        console.log("landed")
+        //console.log("landed")
         return(
           
          <div>  

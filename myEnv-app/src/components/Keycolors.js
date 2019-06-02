@@ -44,7 +44,7 @@ class Keycolors extends Component {
     }
 
 onGoodMouseIn =()=>{
-    console.log('good mouse')
+    //console.log('good mouse')
     this.setState({
         isGoodMouse:true
     })
@@ -53,44 +53,44 @@ onGoodMouseIn =()=>{
 
 
 onModerateMouseIn =()=>{
-    console.log("moderate mouse")
+    //console.log("moderate mouse")
     this.setState({
         isModerateMouse:true
     })
   }
   onUhgMouseIn =()=>{
-    console.log("uhg mouse")
+    //console.log("uhg mouse")
     this.setState({
         isUhgMouse:true
     })
   }
   onHazardousMouseIn =()=>{
-    console.log("hazardous")
+    //console.log("hazardous")
     this.setState({
         isHazardousMouse:true
     })
   }
   onVeryMouseIn=()=>{
-    console.log("very unhealthy")
+    //console.log("very unhealthy")
     this.setState({
         isVeryMouse:true
     })
   }
   onUnhealthyMouseIn=()=>{
-    console.log("unhealthy")
+    //console.log("unhealthy")
     this.setState({
         isUnhealthyMouse:true
     })
   }   
   onMouseIn =(key)=>{
-    console.log(key)
+    //console.log(key)
     this.setState({
       mouseOverId :key,
       isHovering:true
       
     })
 
-   //console.log("what the foo")
+  
   }
 
   onMouseOut =()=>{
@@ -104,7 +104,7 @@ onModerateMouseIn =()=>{
       
     })
 
-   //console.log("what the foo")
+ 
   }
     render(){
         
