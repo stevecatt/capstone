@@ -46,7 +46,7 @@ class Login extends Component {
         
         .then(response => {
           if (response.data != false){
-          console.log(response)
+         // console.log(response)
           let token = response.data.token
           let uid=response.data.uid
 
@@ -55,7 +55,7 @@ class Login extends Component {
 
           this.props.onTokenRecieved(token,uid)
           setAuthenticationHeader(token)
-          console.log("Logged in")
+          //console.log("Logged in")
           this.props.history.push('/userpage')
           }else{
             this.setState({

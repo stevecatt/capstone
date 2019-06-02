@@ -72,7 +72,7 @@ class MobMapBox extends Component {
   // }
 
   onMouseIn =(key)=>{
-    console.log(key)
+    //console.log(key)
     this.setState({
       mouseOverId :key,
       isHovering:true
@@ -94,7 +94,7 @@ class MobMapBox extends Component {
   }
 
   goHome=()=>{
-    console.log("going home")
+    //console.log("going home")
 
   }
 
@@ -166,9 +166,9 @@ class MobMapBox extends Component {
       let windRound= Math.round(windspeed)
       let temperature =weatherItems.main.temp
       let tempRound = Math.round(temperature)
-      console.log(data,"data input to function")
+      //console.log(data,"data input to function")
 
-      console.log(weatherItems)
+      //console.log(weatherItems)
       this.setState({
         temperature:tempRound,
         sunrise:sunrise,
@@ -191,7 +191,7 @@ class MobMapBox extends Component {
           o3:this.state.homeo3,
 
         })
-        console.log("no data")
+        //console.log("no data")
       }
       else{
       if (data.iaqi.o3){
@@ -230,7 +230,7 @@ class MobMapBox extends Component {
     fetch(url)
     .then(response => response.json())
     .then((json)=>{
-      console.log("response from china",json)
+      //console.log("response from china",json)
       let markerAqi = {
         lat:lat,
         long:long,
@@ -262,7 +262,7 @@ class MobMapBox extends Component {
         
         
     })
-    console.log("trying to find json",json)
+    //console.log("trying to find json",json)
 
     })
   }
@@ -270,7 +270,7 @@ class MobMapBox extends Component {
 
   removeIcon=(key)=>{
     
-    console.log("this the key",key)
+    //console.log("this the key",key)
     
 
     let markers= this.state.markers.filter(mark => mark.ts !== key)
@@ -279,11 +279,11 @@ class MobMapBox extends Component {
       markers:markers,
       markerAqi:[]
     },() => {
-      console.log ("this is updated markers,",this.state.markers)
-      console.log ("these are the markers left",markers)
+     // console.log ("this is updated markers,",this.state.markers)
+      //console.log ("these are the markers left",markers)
     
       //the comma and () mean wait till im done with previous step when setting state 
-      console.log('feed for show markers',this.state.markers)
+      //console.log('feed for show markers',this.state.markers)
       this.state.markers.map(llt=>{
         console.log("this is the feed to aqi,",llt.lat,llt.long,llt.ts)
         //kinda workd but needs to think about duplivate timestamps 
@@ -297,7 +297,7 @@ class MobMapBox extends Component {
   
     
     
-    console.log("i clicked the button",key,this.props.userId)
+    //console.log("i clicked the button",key,this.props.userId)
     axios.post(urls.removeFavorite,{
       markerId:key,
       userId:this.props.userId
@@ -305,17 +305,17 @@ class MobMapBox extends Component {
 
     })
     .then((response)=>{
-      console.log('this should come back from server',response)
+      //console.log('this should come back from server',response)
       //this.getUserMarkers()
     })
     .then(()=>{
      //this.getUserMarkers()
-      console.log("i should be ready to retrieve stuff ")
+      //console.log("i should be ready to retrieve stuff ")
     })
   }
 
   handleClick=(e)=>{
-    console.log(e,"we clicked here")
+    //console.log(e,"we clicked here")
     let markLong = e.lngLat[0]
     let markLat =  e.lngLat[1]
     let ts= e.timeStamp
@@ -327,7 +327,7 @@ class MobMapBox extends Component {
     }
     
     //save favorites 
-    console.log(markLat,markLong,this.props.userId,ts,"this is what i hope to send")
+    //console.log(markLat,markLong,this.props.userId,ts,"this is what i hope to send")
     axios.post(urls.saveFavorite, {
      
       markLat: markLat,
@@ -339,7 +339,7 @@ class MobMapBox extends Component {
   
   .then(response =>  {
       if(response.data) {
-        console.log(response.data)
+        //console.log(response.data)
         //let message= response.data
         this.setState({
           message:"i think this worked"
@@ -349,17 +349,17 @@ class MobMapBox extends Component {
         
         
       } else if (response.data.error){
-        console.log(response.data.error)
+        //console.log(response.data.error)
        
        
         
        
         
       }else{
-          console.log("error")
+          //console.log("error")
       }
     })
-    console.log(marker)
+    //console.log(marker)
     this.setState({
       markers:this.state.markers.concat(marker),
       
@@ -379,7 +379,7 @@ class MobMapBox extends Component {
   componentDidMount() {
     if('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
-        console.log(position.coords.latitude)
+        //console.log(position.coords.latitude)
        
         this.setState({
           latitude: position.coords.latitude,
@@ -401,7 +401,7 @@ class MobMapBox extends Component {
         fetch(url)
         .then(response => response.json())
         .then((json)=>{
-          console.log(json.data.dominentpol)
+          //console.log(json.data.dominentpol)
           this.dompolToEnglish(json.data.dominentpol)
           this.setState({
             aqi:json.data.aqi,

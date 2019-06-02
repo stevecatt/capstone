@@ -45,9 +45,9 @@ function authenticate(req,res, next) {
 
   jwt.verify(token,'secret',(err, decoded) => {
     if(decoded) {
-      console.log(decoded)
+      //console.log(decoded)
       if(decoded.id) {
-        console.log(decoded.id)
+       //console.log(decoded.id)
         next()
       } else {
         res.status(401).json({message: 'Token invalid'})
@@ -75,10 +75,9 @@ app.get('/hello', (req,res) => {
   app.post('/register', (req,res) => {
     //removed name requirements from registration
      let userName = req.body.userName
-    // let firstName = req.body.firstName
-    //let lastName= req.body.lastName
+    
     let hash = bcrypt.hashSync(req.body.password, saltRounds)
-//console.log(userName,hash)
+
 
     db.one('SELECT EXISTS(SELECT user_name FROM users WHERE user_name = $1)', [userName])
     .then((user) => {
@@ -89,7 +88,7 @@ app.get('/hello', (req,res) => {
         db.one('INSERT INTO users (user_name, hash) VALUES($1,$2) RETURNING id', [userName, hash])
         .then((added)=>{
           if(added){
-           // console.log(added)
+          
             res.json({success: true})
           }
           else {
@@ -111,9 +110,7 @@ app.post('/get-favorites',authenticate,(req,res)=>{
   .then((favorites)=>{
     res.json({favorites})
   })
-  //console.log(user)
-  //res.json({user})
-
+  
 })
 //removing favorite marker by user id and marker id 
 
@@ -125,7 +122,7 @@ console.log(user,markerId)
 db.any('DELETE FROM environmental_table WHERE marker_id = $1 AND user_id = $2 RETURNING id',[markerId,user])
 .then((deleted)=>{
   if (deleted){
-    console.log("deleted this one",deleted)
+   // console.log("deleted this one",deleted)
     res.json({message:"removed",deleted})
   }
   
@@ -145,7 +142,7 @@ let user =req.body.userId
 let markerId = req.body.ts
 let markerLat = req.body.markLat
 let markerLong=req.body.markLong
-console.log(user,markerId,markerLat,markerLong)
+//console.log(user,markerId,markerLat,markerLong)
 //res.json("success")
 
 

@@ -44,7 +44,7 @@ ReactDOM.render(
                     
                    
                     <Route path="/logout" component={Logout}/>
-                    <App />
+                  
                 </Switch>
             </BaseLayout>
         </BreakpointProvider>
